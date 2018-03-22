@@ -17,6 +17,7 @@
 		AB4B540420645D8C00421D6E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB4B540220645D8C00421D6E /* LaunchScreen.storyboard */; };
 		AB4B540F20645D8C00421D6E /* OrbzTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4B540E20645D8C00421D6E /* OrbzTests.swift */; };
 		AB4B541A20645D8C00421D6E /* OrbzUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4B541920645D8C00421D6E /* OrbzUITests.swift */; };
+		AB4B54282064606700421D6E /* GameVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4B54272064606700421D6E /* GameVariables.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		AB4B541520645D8C00421D6E /* OrbzUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrbzUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB4B541920645D8C00421D6E /* OrbzUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbzUITests.swift; sourceTree = "<group>"; };
 		AB4B541B20645D8C00421D6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AB4B54272064606700421D6E /* GameVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameVariables.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				AB4B540020645D8C00421D6E /* Assets.xcassets */,
 				AB4B540220645D8C00421D6E /* LaunchScreen.storyboard */,
 				AB4B540520645D8C00421D6E /* Info.plist */,
+				AB4B54272064606700421D6E /* GameVariables.swift */,
 			);
 			path = Orbz;
 			sourceTree = "<group>";
@@ -271,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB4B53FA20645D8C00421D6E /* GameScene.swift in Sources */,
+				AB4B54282064606700421D6E /* GameVariables.swift in Sources */,
 				AB4B53FC20645D8C00421D6E /* GameViewController.swift in Sources */,
 				AB4B53F420645D8C00421D6E /* AppDelegate.swift in Sources */,
 			);
