@@ -18,7 +18,7 @@ class GameScene: SKScene {
         backgroundColor = SKColor.black
         //play button
         print("Play button created")
-        btnPlay.fontColor = SKColor.black
+        btnPlay.fontColor = SKColor.white
         btnPlay.fontSize = 60
         btnPlay.text = "PLAY"
         btnPlay.name = "btnPlay"
@@ -27,7 +27,7 @@ class GameScene: SKScene {
         
         //instruction button
         print("Instruction button created")
-        btnControls.fontColor = SKColor.black
+        btnControls.fontColor = SKColor.white
         btnControls.fontSize = 50
         btnControls.text = "Controls"
         btnControls.name = "btnControls"
@@ -35,7 +35,7 @@ class GameScene: SKScene {
         self.addChild(btnControls)
         
         print("Play Music button created")
-        btnToggleMute.fontColor = SKColor.black
+        btnToggleMute.fontColor = SKColor.white
         btnToggleMute.fontSize = 40
         btnToggleMute.text = "Play Music"
         btnToggleMute.name = "btnToggleMute"
