@@ -60,7 +60,23 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        for t: AnyObject in touches {
+            let location = t.location(in: self)
+            let theNode = self.atPoint(location)
+            if theNode.name == btnControls.name {
+                print("The Instruction button was touched")
+                let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 2)
+                //let gameScene = InstructionScene(size: self.size);
+                //self.view?.presentScene(gameScene, transition: transition)
+            } else if theNode.name == btnPlay.name {
+                print("The play button was touched")
+                let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 2)
+                //let gameScene = LevelOneScene(size: self.size);
+                //self.view?.presentScene(gameScene, transition: transition)
+            }else{
+                print("outside area")
+            }
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
