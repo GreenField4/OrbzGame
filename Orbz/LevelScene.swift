@@ -10,10 +10,10 @@ import UIKit
 import SpriteKit
 import GameplayKit
 
-class LevelScene: SKScene {
+class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let imgArrow = SKSpriteNode(imageNamed: "ornamented_arrow_0")
-    let btnReserve = SKSpriteNode(imageNamed: "Square_with_corners.svg")
-    var imgBarrior = SKSpriteNode()
+    let btnReserve = SKSpriteNode()
+    let imgBarrior = SKSpriteNode()
     override func didMove(to view: SKView) {
         backgroundColor = SKColor.black
         //shoot button created
@@ -23,16 +23,29 @@ class LevelScene: SKScene {
         self.addChild(imgArrow)
         
         //Barrior one image created
-        print("Barrior one image created")
-        imgBarrior.size = CGSize(width: self.frame.maxX, height: )
+        print("Barrior image created")
+        imgBarrior.size = CGSize(width: self.frame.maxX, height: self.frame.maxY )
         imgBarrior.name = "imgBarrior"
-        imgBarrior.position = CGPoint(x:(self.frame.minX + self.frame.midX)/2, y:self.frame.minY+246+100+54)
+        imgBarrior.color = SKColor.darkGray
+        imgBarrior.position = CGPoint(x:self.frame.midX, y:self.frame.midY + self.frame.maxY-1)
         imgBarrior.physicsBody = SKPhysicsBody() // define boundary of body
         imgBarrior.physicsBody?.isDynamic = true // 2
         imgBarrior.physicsBody?.categoryBitMask = PhysicsCategory.Barrior //
         imgBarrior.physicsBody?.contactTestBitMask = PhysicsCategory.Orb  // Contact with bullet
         imgBarrior.physicsBody?.collisionBitMask = PhysicsCategory.None // No bouncing on collision
         self.addChild(imgBarrior)
+        
+        //Barrior one image created
+        print("Barrior image created")
+        btnReserve.size = CGSize(width: 200, height: 200 )
+        btnReserve.name = "btnReserve"
+        btnReserve.color = SKColor.white
+        btnReserve.position = CGPoint(x:self.frame.maxX-100, y:self.frame.minY+100)
+        self.addChild(btnReserve)
+        
+        // set the physical world
+        physicsWorld.gravity = CGVector(dx: 0, dy: 0)
+        physicsWorld.contactDelegate = self
     }
     
     

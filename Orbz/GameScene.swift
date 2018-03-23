@@ -70,9 +70,9 @@ class GameScene: SKScene {
                 self.view?.presentScene(gameScene, transition: transition)
             } else if theNode.name == btnPlay.name {
                 print("The play button was touched")
-                //let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 2)
-                //let gameScene = LevelOneScene(size: self.size);
-                //self.view?.presentScene(gameScene, transition: transition)
+                let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
+                let gameScene = LevelScene(size: self.size);
+                self.view?.presentScene(gameScene, transition: transition)
             }else{
                 print("outside area")
             }
