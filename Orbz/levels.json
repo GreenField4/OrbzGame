@@ -1,0 +1,18 @@
+[
+ {
+    "bgTextureName":"test.png",
+    "bgMusicName":"test.mp3",
+    "orbMatrix":[
+        [{"color":"red"}, {"color":"green"}, {"color":"blue"}],
+        [{"color":"yellow"}, {"color":"purple"}, {"color":"black"}]
+    ]
+ },
+ {
+    "bgTextureName":"test2.png",
+    "bgMusicName":"test2.mp3",
+    "orbMatrix":[
+        [{"color":"red"}, {"color":"green"}, {"color":"blue"}],
+        [{"color":"yellow"}, {"color":"purple"}, {"color":"black"}]
+    ]
+ }
+]
