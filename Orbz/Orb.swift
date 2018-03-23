@@ -7,3 +7,8 @@
 //
 
 import Foundation
+
+class Orb: Codable
+{
+    public let color: String
+}
