@@ -37,7 +37,7 @@ class LevelLoader
         }
     }
     
-    public static func getNextLevel() -> Level
+    public static func getNextLevel() -> Boolean
     {
         let level = instance.levels[instance.progress]
         instance.progress = (instance.progress + 1) % instance.levels.count
