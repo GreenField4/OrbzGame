@@ -45,21 +45,15 @@ class GameViewController: UIViewController {
             }
         }
         */
-        if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
-            if let scene = SKScene(fileNamed: "GameScene") {
-                // Set the scale mode to scale to fit the window
-                scene.scaleMode = .aspectFill
-                
-                // Present the scene
-                view.presentScene(scene)
-            }
-            
-            view.ignoresSiblingOrder = true
-            
-            view.showsFPS = true
-            view.showsNodeCount = true
-        }
+        let titleScene = TitleScene()
+        titleScene.scaleMode = .resizeFill
+        
+        let skView = view as! SKView
+        skView.ignoresSiblingOrder = true
+        skView.showsNodeCount = true
+        skView.showsFPS = true
+        
+        skView.presentScene(titleScene)
     }
 
     override var shouldAutorotate: Bool {

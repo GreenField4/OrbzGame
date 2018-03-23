@@ -19,7 +19,7 @@ class ControlScene: SKScene {
         print("Instruction title label created")
         let lblInstructionTitle = SKLabelNode(fontNamed: "Courier")
         lblInstructionTitle.fontColor = SKColor.white
-        lblInstructionTitle.fontSize = 40
+        lblInstructionTitle.fontSize = 20
         lblInstructionTitle.text = "Instructions"
         lblInstructionTitle.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-200);
         lblInstructionTitle.numberOfLines = 0
@@ -39,7 +39,7 @@ class ControlScene: SKScene {
         print("Control title label created")
         let lblControlsTitle = SKLabelNode(fontNamed: "Courier")
         lblControlsTitle.fontColor = SKColor.white
-        lblControlsTitle.fontSize = 40
+        lblControlsTitle.fontSize = 30
         lblControlsTitle.text = "Controls"
         lblControlsTitle.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-550);
         lblControlsTitle.numberOfLines = 0
@@ -58,7 +58,7 @@ class ControlScene: SKScene {
         print("Back button created")
         
         btnBack.fontColor = SKColor.white
-        btnBack.fontSize = 40
+        btnBack.fontSize = 20
         btnBack.text = "Back"
         btnBack.name = "btnBack"
         btnBack.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-850);
@@ -86,7 +86,7 @@ class ControlScene: SKScene {
             if theNode.name == btnBack.name {
                 print("The back button was touched ")
                 let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
-                let gameScene = GameScene(size: self.size);
+                let gameScene = TitleScene(size: self.size);
                 self.view?.presentScene(gameScene, transition: transition)
             } else {
                 print("outside area")

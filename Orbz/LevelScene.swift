@@ -24,7 +24,7 @@ class LevelScene: SKScene {
         
         //Barrior one image created
         print("Barrior one image created")
-        imgBarrior.size = CGSize(width: self.frame.maxX, height: )
+//        imgBarrior.size = CGSize(width: self.frame.maxX, height: )
         imgBarrior.name = "imgBarrior"
         imgBarrior.position = CGPoint(x:(self.frame.minX + self.frame.midX)/2, y:self.frame.minY+246+100+54)
         imgBarrior.physicsBody = SKPhysicsBody() // define boundary of body

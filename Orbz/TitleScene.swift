@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class TitleScene: SKScene {
     
     let btnToggleMute = SKLabelNode(fontNamed: "Courier")
     let btnPlay = SKLabelNode(fontNamed: "Courier")
@@ -19,7 +19,7 @@ class GameScene: SKScene {
         //play button
         print("Play button created")
         btnPlay.fontColor = SKColor.white
-        btnPlay.fontSize = 60
+        btnPlay.fontSize = 30
         btnPlay.text = "PLAY"
         btnPlay.name = "btnPlay"
         btnPlay.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+200);
@@ -28,7 +28,7 @@ class GameScene: SKScene {
         //instruction button
         print("Instruction button created")
         btnControls.fontColor = SKColor.white
-        btnControls.fontSize = 50
+        btnControls.fontSize = 30
         btnControls.text = "Controls"
         btnControls.name = "btnControls"
         btnControls.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+100);
@@ -36,7 +36,7 @@ class GameScene: SKScene {
         
         print("Play Music button created")
         btnToggleMute.fontColor = SKColor.white
-        btnToggleMute.fontSize = 40
+        btnToggleMute.fontSize = 30
         btnToggleMute.text = "Toggle Mute"
         btnToggleMute.name = "btnToggleMute"
         btnToggleMute.position =  CGPoint(x:self.frame.midX, y:self.frame.midY);
