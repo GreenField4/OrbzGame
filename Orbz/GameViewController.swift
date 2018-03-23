@@ -14,7 +14,7 @@ class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        /*
         // Test level loading
         LevelLoader.loadLevelsFromJSON()
         let level = LevelLoader.getNextLevel()
@@ -44,7 +44,7 @@ class GameViewController: UIViewController {
                 
             }
         }
-        
+        */
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = SKScene(fileNamed: "GameScene") {

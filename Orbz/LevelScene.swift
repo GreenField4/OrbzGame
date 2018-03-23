@@ -1,16 +1,16 @@
 //
-//  GameScene.swift
+//  LevelScene.swift
 //  Orbz
 //
-//  Created by Andrew Greenfield on 2018-03-22.
+//  Created by Andrew Greenfield on 2018-03-23.
 //  Copyright © 2018 Andrew Greenfield. All rights reserved.
 //
 
+import UIKit
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
-    
+class LevelScene: SKScene {
     let btnToggleMute = SKLabelNode(fontNamed: "Courier")
     let btnPlay = SKLabelNode(fontNamed: "Courier")
     let btnControls = SKLabelNode(fontNamed: "Courier")
