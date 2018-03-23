@@ -11,36 +11,28 @@ import SpriteKit
 import GameplayKit
 
 class LevelScene: SKScene {
-    let btnToggleMute = SKLabelNode(fontNamed: "Courier")
-    let btnPlay = SKLabelNode(fontNamed: "Courier")
-    let btnControls = SKLabelNode(fontNamed: "Courier")
+    let imgArrow = SKSpriteNode(imageNamed: "ornamented_arrow_0")
+    let btnReserve = SKSpriteNode(imageNamed: "Square_with_corners.svg")
+    var imgBarrior = SKSpriteNode()
     override func didMove(to view: SKView) {
         backgroundColor = SKColor.black
-        //play button
-        print("Play button created")
-        btnPlay.fontColor = SKColor.white
-        btnPlay.fontSize = 60
-        btnPlay.text = "PLAY"
-        btnPlay.name = "btnPlay"
-        btnPlay.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+200);
-        self.addChild(btnPlay)
+        //shoot button created
+        print("Shoot arrow created")
+        imgArrow.name = "imgArrow"
+        imgArrow.position = CGPoint(x:self.frame.midX, y:self.frame.minY+130)
+        self.addChild(imgArrow)
         
-        //instruction button
-        print("Instruction button created")
-        btnControls.fontColor = SKColor.white
-        btnControls.fontSize = 50
-        btnControls.text = "Controls"
-        btnControls.name = "btnControls"
-        btnControls.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+100);
-        self.addChild(btnControls)
-        
-        print("Play Music button created")
-        btnToggleMute.fontColor = SKColor.white
-        btnToggleMute.fontSize = 40
-        btnToggleMute.text = "Toggle Mute"
-        btnToggleMute.name = "btnToggleMute"
-        btnToggleMute.position =  CGPoint(x:self.frame.midX, y:self.frame.midY);
-        self.addChild(btnToggleMute)
+        //Barrior one image created
+        print("Barrior one image created")
+        imgBarrior.size = CGSize(width: self.frame.maxX, height: )
+        imgBarrior.name = "imgBarrior"
+        imgBarrior.position = CGPoint(x:(self.frame.minX + self.frame.midX)/2, y:self.frame.minY+246+100+54)
+        imgBarrior.physicsBody = SKPhysicsBody() // define boundary of body
+        imgBarrior.physicsBody?.isDynamic = true // 2
+        imgBarrior.physicsBody?.categoryBitMask = PhysicsCategory.Barrior //
+        imgBarrior.physicsBody?.contactTestBitMask = PhysicsCategory.Orb  // Contact with bullet
+        imgBarrior.physicsBody?.collisionBitMask = PhysicsCategory.None // No bouncing on collision
+        self.addChild(imgBarrior)
     }
     
     
@@ -61,21 +53,7 @@ class LevelScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t: AnyObject in touches {
-            let location = t.location(in: self)
-            let theNode = self.atPoint(location)
-            if theNode.name == btnControls.name {
-                print("The Instruction button was touched")
-                let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
-                let gameScene = ControlScene(size: self.size);
-                self.view?.presentScene(gameScene, transition: transition)
-            } else if theNode.name == btnPlay.name {
-                print("The play button was touched")
-                //let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 2)
-                //let gameScene = LevelOneScene(size: self.size);
-                //self.view?.presentScene(gameScene, transition: transition)
-            }else{
-                print("outside area")
-            }
+            
         }
     }
     
