@@ -17,21 +17,21 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
     print(y)
     var direction = CGVector(dx: x,dy: y)
     if x == 0{
-        // compute the real destination for the projectile
-        let realDest = realDestination(orb.position, endPoint: CGPoint(x: (maxX/2), y: maxY))
-        
         // 9 - Create the actions
-        let actionMove = SKAction.move(to: realDest, duration: 2.0)
+        let actionMove = SKAction.move(to: CGPoint(x: (maxX/2), y: maxY), duration: 2.0)
         orb.run(SKAction.sequence([actionMove]))
     }else {
         let scalor = abs(((maxX/2)-35)/direction.dx)
+        print(scalor)
         direction =  CGVector(dx: direction.dx * scalor,dy: direction.dy * scalor)
-        let initalMove = SKAction.move(by: direction, duration: 1)
-        direction = CGVector(dx: direction.dx * 2+35,dy: direction.dy * 2)
-        let revDirection = CGVector(dx: -direction.dx,dy: direction.dy)
+        print(direction.dx)
+        print(direction.dy)
+        let initalMove = SKAction.move(to: CGPoint(x: (maxX/2) + direction.dx, y: direction.dy), duration: 1)
+        direction = CGVector(dx: (direction.dx * 2) + 35,dy: direction.dy * 2)
+        let revDirection = CGVector(dx: 0 - direction.dx,dy: direction.dy)
         let normalDirection = SKAction.move(by: direction, duration: 2)
         let revDirectionMove = SKAction.move(by: revDirection, duration: 2)
-        orb.run(SKAction.sequence([initalMove]))
+        orb.run(initalMove)
         orb.run(SKAction.repeatForever(SKAction.sequence([revDirectionMove, normalDirection])))
     }
 }
