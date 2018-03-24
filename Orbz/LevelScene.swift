@@ -241,9 +241,20 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 
                 if reserveOrb == nil
                 {
+                    print("Sending orb to empty reserve box")
                     reserveOrb = orbQueue.removeFirst()
-                    
+                    getNextPlayerOrb()
                 }
+                else
+                {
+                    print("Swapping with reserve box")
+                    let temp = orbQueue[0]
+                    orbQueue[0] = reserveOrb!
+                    orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
+                    reserveOrb = temp
+                }
+                
+                reserveOrb!.position = CGPoint(x: size.width - size.width/10, y: size.height/18)
             }
             else
             {
