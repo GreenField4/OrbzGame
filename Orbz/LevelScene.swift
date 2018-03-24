@@ -20,6 +20,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let level = LevelLoader.getNextLevel()
     var framesSinceLastTap = 0
     var shouldCountFramesSinceLastTap = false
+    var reserveOrb: Orb?
     let frameTimerLimit = 5
     var orbMatrix = Array<Array<Orb>>()
     
@@ -99,6 +100,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         let nextOrb = Orb(color: colorsUsed[Int(arc4random_uniform(UInt32(colorsUsed.count)))])
         orbQueue.append(nextOrb)
         orbQueue.last?.position = CGPoint(x:self.frame.midX/4, y: GameConstants.OrbHeight/2)
+        orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
         self.addChild(nextOrb)
     }
     
@@ -108,7 +110,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         {
             getNextPlayerOrb()
         }
-        orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
+        //orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
     }
     
     override func didMove(to view: SKView)
@@ -227,9 +229,9 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         // Process "Tap" events, in this case
         if framesSinceLastTap <= frameTimerLimit
         {
-            fire(arrowLoc: imgArrow.position, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
+            fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
             print(imgArrow.position)
-            
+            getNextPlayerOrb()
             shouldCountFramesSinceLastTap = false
         }
     }
