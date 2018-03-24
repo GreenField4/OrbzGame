@@ -1,14 +1,14 @@
 [
  {
-    "bgTextureName":"test.png",
-    "bgMusicName":"test.mp3",
+    "bgTextureName":"level1",
+    "bgMusicName":"test",
     "orbColorMatrix":[
         ["red", "green", "", "blue"],
         ["yellow", "purple", "orange"]
     ]
  },
  {
-    "bgTextureName":"test2.png",
+    "bgTextureName":"level2",
     "bgMusicName":"test2.mp3",
     "orbColorMatrix":[
         ["orange", "green", "blue"],

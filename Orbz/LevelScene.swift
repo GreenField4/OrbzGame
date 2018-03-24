@@ -117,6 +117,13 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     {
         backgroundColor = SKColor.black
         
+        let bgNode = SKSpriteNode(imageNamed: level.bgTextureName)
+        bgNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        bgNode.isUserInteractionEnabled = false
+        bgNode.zPosition = -1
+        bgNode.size = CGSize(width: size.width, height: size.height)
+        self.addChild(bgNode)
+        
         // Set up arrow rotation anchor
         arrowAnchor.position = CGPoint(x: self.frame.midX, y: self.frame.minY)
         
