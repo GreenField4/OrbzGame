@@ -18,7 +18,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     var colorsUsed = Array<String>()
     var orbQueue = Array<Orb>()
     let level = LevelLoader.getNextLevel()
-    
+    var framesSinceLastTap = 0
+    var shouldCountFramesSinceLastTap = false
     var orbMatrix = Array<Array<Orb>>()
     
     // Calculate screen position from row and column indices
@@ -92,6 +93,23 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         }
     }
     
+    private func getNextPlayerOrb()
+    {
+        let nextOrb = Orb(color: colorsUsed[Int(arc4random_uniform(UInt32(colorsUsed.count)))])
+        orbQueue.append(nextOrb)
+        orbQueue.last?.position = CGPoint(x:self.frame.midX/4, y: GameConstants.OrbHeight/2)
+        self.addChild(nextOrb)
+    }
+    
+    private func initPlayerOrbs()
+    {
+        for _ in 0...1
+        {
+            getNextPlayerOrb()
+        }
+        orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
+    }
+    
     override func didMove(to view: SKView)
     {
         backgroundColor = SKColor.black
@@ -137,11 +155,11 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         physicsWorld.contactDelegate = self
         
         layoutOrbs()
+        initPlayerOrbs()
     }
     
     
     func touchDown(atPoint pos : CGPoint) {
-        
         
     }
     
@@ -157,7 +175,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
-        
+        fire(arrowLoc: imgArrow.position, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
+        print(imgArrow.position)
     }
     
     private func clamp(_ value: CGFloat) -> CGFloat
@@ -184,11 +203,13 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             if (arrowAnchor.zRotation + rotationAngle > (52 * .pi/180) )
             {
                 arrowAnchor.zRotation = (52 * .pi/180)
+                
             }else if (arrowAnchor.zRotation + rotationAngle < (-52 * .pi/180)){
                 arrowAnchor.zRotation = (-52 * .pi/180)
+                
             }else{
                 arrowAnchor.zRotation += rotationAngle
-                print(arrowAnchor.zRotation)
+                
             }
         }
     }
@@ -203,6 +224,9 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+        if shouldCountFramesSinceLastTap
+        {
+            framesSinceLastTap += 1
+        }
     }
 }
