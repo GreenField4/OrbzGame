@@ -11,8 +11,10 @@ import SpriteKit
 import GameplayKit
 
 func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
-    let x = 1 * cos(angle + .pi/2)
-    let y = 1 * sin(angle + .pi/2)
+    let x = cos(angle + .pi/2)
+    let y = sin(angle + .pi/2)
+    print(x)
+    print(y)
     var direction = CGVector(dx: x,dy: y)
     if x == 0{
         // compute the real destination for the projectile
