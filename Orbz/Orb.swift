@@ -26,7 +26,8 @@ class Orb: SKSpriteNode
 //        self.physicsBody?.contactTestBitMask = GameConstants.CollisionCategories.InvaderBullet | GameConstants.CollisionCategories.Invader
         self.physicsBody?.collisionBitMask = 0x0
         
-        self.name = "Player"
+        self.name = "Orb - " + colour
+        self.isUserInteractionEnabled = false
     }
     
     override func encode(with aCoder: NSCoder)

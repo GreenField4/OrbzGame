@@ -20,6 +20,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let level = LevelLoader.getNextLevel()
     var framesSinceLastTap = 0
     var shouldCountFramesSinceLastTap = false
+    var reserveOrb: Orb?
     let frameTimerLimit = 5
     var orbMatrix = Array<Array<Orb>>()
     
@@ -99,6 +100,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         let nextOrb = Orb(color: colorsUsed[Int(arc4random_uniform(UInt32(colorsUsed.count)))])
         orbQueue.append(nextOrb)
         orbQueue.last?.position = CGPoint(x:self.frame.midX/4, y: GameConstants.OrbHeight/2)
+        orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
         self.addChild(nextOrb)
     }
     
@@ -108,7 +110,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         {
             getNextPlayerOrb()
         }
-        orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
+        //orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
     }
     
     override func didMove(to view: SKView)
@@ -224,13 +226,48 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // Process "Tap" events, in this case
         if framesSinceLastTap <= frameTimerLimit
         {
-            fire(arrowLoc: imgArrow.position, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
-            print(imgArrow.position)
+            // Process "Tap" events, in this case
+            let touch = touches.first as UITouch!
+            let touchLocation = touch?.location(in: self)
+            let nodes = self.nodes(at: touchLocation!)
+            var foundOtherEvent = false
             
             shouldCountFramesSinceLastTap = false
+            
+            for node in nodes
+            {
+                if node.name == "btnReserve"
+                {
+                    print("Reserve box tapped")
+                    
+                    if reserveOrb == nil
+                    {
+                        print("Sending orb to empty reserve box")
+                        reserveOrb = orbQueue.removeFirst()
+                        getNextPlayerOrb()
+                    }
+                    else
+                    {
+                        print("Swapping with reserve box")
+                        let temp = orbQueue[0]
+                        orbQueue[0] = reserveOrb!
+                        orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
+                        reserveOrb = temp
+                    }
+                    
+                    reserveOrb!.position = CGPoint(x: size.width - size.width/10, y: size.height/18)
+                    foundOtherEvent = true
+                }
+            }
+            
+            if !foundOtherEvent
+            {
+                fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
+                print(imgArrow.position)
+                getNextPlayerOrb()
+            }
         }
     }
     
