@@ -10,8 +10,9 @@ import Foundation
 import SpriteKit
 import GameplayKit
 
-func fire(arrowLoc : CGPoint, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
-    var direction = CGVector(dx: arrowLoc.x - (maxX/2),dy: arrowLoc.y)
+func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
+    let x = ((maxX/2)-35) *
+    var direction = CGVector(dx: ((maxX/2)-35),dy: arrowLoc.y)
     if arrowLoc.x == (maxX/2){
         // compute the real destination for the projectile
         let realDest = realDestination(orb.position, endPoint: arrowLoc)
