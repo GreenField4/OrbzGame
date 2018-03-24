@@ -155,6 +155,14 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.contactDelegate = self
         
+        let nextOrbLabel = SKLabelNode()
+        nextOrbLabel.text = "NEXT"
+        nextOrbLabel.fontName = "AvenirNext-Bold"
+        nextOrbLabel.fontSize = 25
+        nextOrbLabel.fontColor = SKColor.white
+        nextOrbLabel.position = CGPoint(x: size.width / 8, y: size.height / 14)
+        self.addChild(nextOrbLabel)
+        
         layoutOrbs()
         initPlayerOrbs()
     }
