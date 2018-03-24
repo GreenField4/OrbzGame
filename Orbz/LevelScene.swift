@@ -227,12 +227,30 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Process "Tap" events, in this case
+        let touch = touches.first as UITouch!
+        let touchLocation = touch?.location(in: self)
+        let node = self.atPoint(touchLocation!)
+        
         if framesSinceLastTap <= frameTimerLimit
         {
-            fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
-            print(imgArrow.position)
-            getNextPlayerOrb()
             shouldCountFramesSinceLastTap = false
+            
+            if node.name == "btnReserve"
+            {
+                print("Reserve box tapped")
+                
+                if reserveOrb == nil
+                {
+                    reserveOrb = orbQueue.removeFirst()
+                    
+                }
+            }
+            else
+            {
+                fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
+                print(imgArrow.position)
+                getNextPlayerOrb()
+            }
         }
     }
     
