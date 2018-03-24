@@ -20,6 +20,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let level = LevelLoader.getNextLevel()
     var framesSinceLastTap = 0
     var shouldCountFramesSinceLastTap = false
+    let frameTimerLimit = 5
     var orbMatrix = Array<Array<Orb>>()
     
     // Calculate screen position from row and column indices
@@ -175,8 +176,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
-        fire(arrowLoc: imgArrow.position, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
-        print(imgArrow.position)
+        framesSinceLastTap = 0
+        shouldCountFramesSinceLastTap = true
     }
     
     private func clamp(_ value: CGFloat) -> CGFloat
@@ -215,7 +216,14 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+        // Process "Tap" events, in this case
+        if framesSinceLastTap <= frameTimerLimit
+        {
+            fire(arrowLoc: imgArrow.position, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
+            print(imgArrow.position)
+            
+            shouldCountFramesSinceLastTap = false
+        }
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
