@@ -38,14 +38,12 @@ class LevelLoader
     
     public static func getNextLevel() -> Level
     {
-        let level = instance.levels[instance.progress]
-        instance.progress = (instance.progress + 1) % instance.levels.count
-        
-        return level
+        return instance.levels[instance.progress]
     }
     
     public static func isGameBeaten() -> Bool
     {
+        instance.progress += 1
         return instance.levels.count == instance.progress
     }
 }

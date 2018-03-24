@@ -15,7 +15,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let btnReserve = SKSpriteNode()
     let imgBarrier = SKSpriteNode()
     private let arrowAnchor = SKNode()
-    let orbQueue = Array<Orb>()
+    var colorsUsed = Array<String>()
+    var orbQueue = Array<Orb>()
     let level = LevelLoader.getNextLevel()
     
     var orbMatrix = Array<Array<Orb>>()
@@ -63,6 +64,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             {
                 if orbColorMatrix[row][col] != ""
                 {
+                    colorsUsed.append(orbColorMatrix[row][col])
                     let currentOrb = Orb(color: orbColorMatrix[row][col])
                     currentOrb.position = getOrbCoordinate(row, col)
                 
@@ -72,6 +74,21 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             }
             
             orbMatrix.append(currentRow)
+        }
+    }
+    
+    private func moveToNextLevel()
+    {
+        if LevelLoader.isGameBeaten()
+        {
+            // Do something here later
+            print("Wow, you beat the game!")
+        }
+        else
+        {
+            let levelTransition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
+            let nextLevelScene = LevelScene(size: self.size)
+            self.view?.presentScene(nextLevelScene, transition: levelTransition)
         }
     }
     
@@ -140,6 +157,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
+        
     }
     
     private func clamp(_ value: CGFloat) -> CGFloat
