@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4592736B2065CC2A0032A4FB /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4592736A2065CC2A0032A4FB /* GameConstants.swift */; };
+		4592736D2065CF3A0032A4FB /* Orb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4592736C2065CF3A0032A4FB /* Orb.swift */; };
 		AB4B53F420645D8C00421D6E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4B53F320645D8C00421D6E /* AppDelegate.swift */; };
 		AB4B53F620645D8C00421D6E /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = AB4B53F520645D8C00421D6E /* GameScene.sks */; };
 		AB4B53F820645D8C00421D6E /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = AB4B53F720645D8C00421D6E /* Actions.sks */; };
@@ -21,7 +23,7 @@
 		AB849C9120658D830006BDD7 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9020658D830006BDD7 /* Level.swift */; };
 		AB849C9320658D8B0006BDD7 /* LevelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9220658D8B0006BDD7 /* LevelLoader.swift */; };
 		AB849C9520658D920006BDD7 /* levels.json in Resources */ = {isa = PBXBuildFile; fileRef = AB849C9420658D920006BDD7 /* levels.json */; };
-		AB849C9720658D980006BDD7 /* Orb.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9620658D980006BDD7 /* Orb.swift */; };
+		AB849C9720658D980006BDD7 /* OrbData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9620658D980006BDD7 /* OrbData.swift */; };
 		AB849C9B20659DAB0006BDD7 /* LevelScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9A20659DAB0006BDD7 /* LevelScene.swift */; };
 		AB849C9D2065AABA0006BDD7 /* ControlScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9C2065AABA0006BDD7 /* ControlScene.swift */; };
 		AB849C9F2065B9DA0006BDD7 /* PhysicsCatagory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9E2065B9DA0006BDD7 /* PhysicsCatagory.swift */; };
@@ -45,6 +47,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4592736A2065CC2A0032A4FB /* GameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
+		4592736C2065CF3A0032A4FB /* Orb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orb.swift; sourceTree = "<group>"; };
 		AB4B53F020645D8C00421D6E /* Orbz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB4B53F320645D8C00421D6E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AB4B53F520645D8C00421D6E /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -65,7 +69,7 @@
 		AB849C9020658D830006BDD7 /* Level.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
 		AB849C9220658D8B0006BDD7 /* LevelLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelLoader.swift; sourceTree = "<group>"; };
 		AB849C9420658D920006BDD7 /* levels.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = levels.json; sourceTree = "<group>"; };
-		AB849C9620658D980006BDD7 /* Orb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Orb.swift; sourceTree = "<group>"; };
+		AB849C9620658D980006BDD7 /* OrbData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrbData.swift; sourceTree = "<group>"; };
 		AB849C9A20659DAB0006BDD7 /* LevelScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelScene.swift; sourceTree = "<group>"; };
 		AB849C9C2065AABA0006BDD7 /* ControlScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlScene.swift; sourceTree = "<group>"; };
 		AB849C9E2065B9DA0006BDD7 /* PhysicsCatagory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCatagory.swift; sourceTree = "<group>"; };
@@ -119,15 +123,17 @@
 		AB4B53F220645D8C00421D6E /* Orbz */ = {
 			isa = PBXGroup;
 			children = (
-				AB849C9620658D980006BDD7 /* Orb.swift */,
+				AB849C9620658D980006BDD7 /* OrbData.swift */,
 				AB849C9420658D920006BDD7 /* levels.json */,
 				AB849C9220658D8B0006BDD7 /* LevelLoader.swift */,
+				4592736A2065CC2A0032A4FB /* GameConstants.swift */,
 				AB849C9020658D830006BDD7 /* Level.swift */,
 				AB4B53F320645D8C00421D6E /* AppDelegate.swift */,
 				AB4B53F520645D8C00421D6E /* GameScene.sks */,
 				AB4B53F720645D8C00421D6E /* Actions.sks */,
 				AB4B53F920645D8C00421D6E /* TitleScene.swift */,
 				AB849C9A20659DAB0006BDD7 /* LevelScene.swift */,
+				4592736C2065CF3A0032A4FB /* Orb.swift */,
 				AB4B53FB20645D8C00421D6E /* GameViewController.swift */,
 				AB4B53FD20645D8C00421D6E /* Main.storyboard */,
 				AB4B540020645D8C00421D6E /* Assets.xcassets */,
@@ -295,16 +301,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB849C9720658D980006BDD7 /* Orb.swift in Sources */,
+				AB849C9720658D980006BDD7 /* OrbData.swift in Sources */,
 				AB4B53FA20645D8C00421D6E /* TitleScene.swift in Sources */,
 				AB849C9320658D8B0006BDD7 /* LevelLoader.swift in Sources */,
 				AB4B54282064606700421D6E /* GameVariables.swift in Sources */,
 				AB849C9D2065AABA0006BDD7 /* ControlScene.swift in Sources */,
 				AB849C9F2065B9DA0006BDD7 /* PhysicsCatagory.swift in Sources */,
 				AB4B53FC20645D8C00421D6E /* GameViewController.swift in Sources */,
+				4592736B2065CC2A0032A4FB /* GameConstants.swift in Sources */,
 				AB849C9B20659DAB0006BDD7 /* LevelScene.swift in Sources */,
 				AB849C9120658D830006BDD7 /* Level.swift in Sources */,
 				AB4B53F420645D8C00421D6E /* AppDelegate.swift in Sources */,
+				4592736D2065CF3A0032A4FB /* Orb.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
