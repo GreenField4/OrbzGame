@@ -226,37 +226,43 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // Process "Tap" events, in this case
-        let touch = touches.first as UITouch!
-        let touchLocation = touch?.location(in: self)
-        let node = self.atPoint(touchLocation!)
-        
         if framesSinceLastTap <= frameTimerLimit
         {
+            // Process "Tap" events, in this case
+            let touch = touches.first as UITouch!
+            let touchLocation = touch?.location(in: self)
+            let nodes = self.nodes(at: touchLocation!)
+            var foundOtherEvent = false
+            
             shouldCountFramesSinceLastTap = false
             
-            if node.name == "btnReserve"
+            for node in nodes
             {
-                print("Reserve box tapped")
-                
-                if reserveOrb == nil
+                if node.name == "btnReserve"
                 {
-                    print("Sending orb to empty reserve box")
-                    reserveOrb = orbQueue.removeFirst()
-                    getNextPlayerOrb()
+                    print("Reserve box tapped")
+                    
+                    if reserveOrb == nil
+                    {
+                        print("Sending orb to empty reserve box")
+                        reserveOrb = orbQueue.removeFirst()
+                        getNextPlayerOrb()
+                    }
+                    else
+                    {
+                        print("Swapping with reserve box")
+                        let temp = orbQueue[0]
+                        orbQueue[0] = reserveOrb!
+                        orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
+                        reserveOrb = temp
+                    }
+                    
+                    reserveOrb!.position = CGPoint(x: size.width - size.width/10, y: size.height/18)
+                    foundOtherEvent = true
                 }
-                else
-                {
-                    print("Swapping with reserve box")
-                    let temp = orbQueue[0]
-                    orbQueue[0] = reserveOrb!
-                    orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
-                    reserveOrb = temp
-                }
-                
-                reserveOrb!.position = CGPoint(x: size.width - size.width/10, y: size.height/18)
             }
-            else
+            
+            if !foundOtherEvent
             {
                 fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
                 print(imgArrow.position)
