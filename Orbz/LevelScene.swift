@@ -13,8 +13,65 @@ import GameplayKit
 class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let imgArrow = SKSpriteNode(imageNamed: "ornamented_arrow_0")
     let btnReserve = SKSpriteNode()
-    let imgBarrior = SKSpriteNode()
-    override func didMove(to view: SKView) {
+    let imgBarrier = SKSpriteNode()
+    let level = LevelLoader.getNextLevel()
+    
+    var orbMatrix = Array<Array<Orb>>()
+    
+    // Calculate screen position from row and column indices
+    private func getOrbCoordinate(_ row: Int, _ col: Int) -> CGPoint
+    {
+        var orbX = (CGFloat(col) * GameConstants.OrbWidth / 1.2) + (GameConstants.OrbWidth / 2)
+        
+        if (row % 2 == 0)
+        {
+            orbX += GameConstants.OrbWidth / 2.35
+        }
+        
+        let orbY = size.height - (GameConstants.OrbHeight / 2) - CGFloat(row * Int(GameConstants.OrbHeight - 8))
+        
+        return CGPoint(x: orbX, y: orbY)
+    }
+    
+    // Calculate row and column indices from screen position
+    private func getGridPosition(_ x: CGFloat, _ y: CGFloat) -> CGPoint
+    {
+        let gridY = floor(y / GameConstants.RowHeight)
+        var xOffset = CGFloat(0)
+        
+        if ((gridY + GameConstants.RowOffset).truncatingRemainder(dividingBy: 2) == 0)
+        {
+            xOffset = GameConstants.OrbWidth / 2
+        }
+        
+        let gridX = floor((x - xOffset) / GameConstants.OrbWidth)
+        
+        return CGPoint(x: gridX, y: gridY)
+    }
+    
+    private func layoutOrbs()
+    {
+        let orbDataMatrix = level.orbDataMatrix
+        
+        for row in 0..<orbDataMatrix.count
+        {
+            var currentRow = Array<Orb>()
+            
+            for col in 0..<orbDataMatrix[row].count
+            {
+                let currentOrb = Orb(color: orbDataMatrix[row][col].color)
+                currentOrb.position = getOrbCoordinate(row, col)
+                
+                currentRow.append(currentOrb)
+                self.addChild(currentOrb)
+            }
+            
+            orbMatrix.append(currentRow)
+        }
+    }
+    
+    override func didMove(to view: SKView)
+    {
         backgroundColor = SKColor.black
         //shoot button created
         print("Shoot arrow created")
@@ -22,26 +79,26 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         imgArrow.position = CGPoint(x:self.frame.midX, y:self.frame.minY+130)
         self.addChild(imgArrow)
         
-        //Barrior one image created
+        //Barrier one image created
 
-        print("Barrior one image created")
-//        imgBarrior.size = CGSize(width: self.frame.maxX, height: )
+        print("Barrier one image created")
+//        imgBarrier.size = CGSize(width: self.frame.maxX, height: )
 
-        print("Barrior image created")
-        imgBarrior.size = CGSize(width: self.frame.maxX, height: self.frame.maxY )
+        print("Barrier image created")
+        imgBarrier.size = CGSize(width: self.frame.maxX, height: self.frame.maxY )
 
-        imgBarrior.name = "imgBarrior"
-        imgBarrior.color = SKColor.darkGray
-        imgBarrior.position = CGPoint(x:self.frame.midX, y:self.frame.midY + self.frame.maxY-1)
-        imgBarrior.physicsBody = SKPhysicsBody() // define boundary of body
-        imgBarrior.physicsBody?.isDynamic = true // 2
-        imgBarrior.physicsBody?.categoryBitMask = PhysicsCategory.Barrior //
-        imgBarrior.physicsBody?.contactTestBitMask = PhysicsCategory.Orb  // Contact with bullet
-        imgBarrior.physicsBody?.collisionBitMask = PhysicsCategory.None // No bouncing on collision
-        self.addChild(imgBarrior)
+        imgBarrier.name = "imgBarrier"
+        imgBarrier.color = SKColor.darkGray
+        imgBarrier.position = CGPoint(x:self.frame.midX, y:self.frame.midY + self.frame.maxY-1)
+        imgBarrier.physicsBody = SKPhysicsBody() // define boundary of body
+        imgBarrier.physicsBody?.isDynamic = true // 2
+        imgBarrier.physicsBody?.categoryBitMask = PhysicsCategory.Barrier //
+        imgBarrier.physicsBody?.contactTestBitMask = PhysicsCategory.Orb  // Contact with bullet
+        imgBarrier.physicsBody?.collisionBitMask = PhysicsCategory.None // No bouncing on collision
+        self.addChild(imgBarrier)
         
-        //Barrior one image created
-        print("Barrior image created")
+        //Barrier one image created
+        print("Barrier image created")
         btnReserve.size = CGSize(width: 200, height: 200 )
         btnReserve.name = "btnReserve"
         btnReserve.color = SKColor.white
@@ -51,6 +108,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         // set the physical world
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.contactDelegate = self
+        
+        layoutOrbs()
     }
     
     

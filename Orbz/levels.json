@@ -2,17 +2,17 @@
  {
     "bgTextureName":"test.png",
     "bgMusicName":"test.mp3",
-    "orbMatrix":[
+    "orbDataMatrix":[
         [{"color":"red"}, {"color":"green"}, {"color":"blue"}],
-        [{"color":"yellow"}, {"color":"purple"}, {"color":"black"}]
+        [{"color":"yellow"}, {"color":"purple"}, {"color":"orange"}]
     ]
  },
  {
     "bgTextureName":"test2.png",
     "bgMusicName":"test2.mp3",
-    "orbMatrix":[
-        [{"color":"red"}, {"color":"green"}, {"color":"blue"}],
-        [{"color":"yellow"}, {"color":"purple"}, {"color":"black"}]
+    "orbDataMatrix":[
+        [{"color":"orange"}, {"color":"green"}, {"color":"blue"}],
+        [{"color":"green"}, {"color":"purple"}, {"color":"pink"}]
     ]
  }
 ]

@@ -12,5 +12,5 @@ class Level: Codable
 {
     public let bgTextureName: String
     public let bgMusicName: String
-    public let orbMatrix: Array<Array<Orb>>
+    public let orbDataMatrix: Array<Array<OrbData>>
 }

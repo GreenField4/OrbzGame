@@ -35,15 +35,15 @@ class LevelLoader
             print("\(error)")
         }
     }
-    /*
-    public static func getNextLevel() -> Boolean
+    
+    public static func getNextLevel() -> Level
     {
         let level = instance.levels[instance.progress]
         instance.progress = (instance.progress + 1) % instance.levels.count
         
         return level
     }
-    */
+    
     public static func isGameBeaten() -> Bool
     {
         return instance.levels.count == instance.progress
