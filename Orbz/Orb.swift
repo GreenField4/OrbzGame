@@ -11,8 +11,11 @@ import SpriteKit
 
 class Orb: SKSpriteNode
 {
+    let colour: String
+    
     init(color: String)
     {
+        self.colour = color
         let texture = GameConstants.orbTextureAtlas.textureNamed(color)
         super.init(texture: texture, color: SKColor.clear, size: CGSize(width: texture.size().width / 2, height: texture.size().height / 2))
         
@@ -26,8 +29,15 @@ class Orb: SKSpriteNode
         self.name = "Player"
     }
     
+    override func encode(with aCoder: NSCoder)
+    {
+        aCoder.encode(colour, forKey: "colour")
+        super.encode(with: aCoder)
+    }
+    
     required init?(coder aDecoder: NSCoder)
     {
+        self.colour = aDecoder.decodeObject(forKey: "colour") as! String
         super.init(coder: aDecoder)
     }
 }

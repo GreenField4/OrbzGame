@@ -14,6 +14,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let imgArrow = SKSpriteNode(imageNamed: "ornamented_arrow_0")
     let btnReserve = SKSpriteNode()
     let imgBarrier = SKSpriteNode()
+    private let arrowAnchor = SKNode()
+    let orbQueue = Array<Orb>()
     let level = LevelLoader.getNextLevel()
     
     var orbMatrix = Array<Array<Orb>>()
@@ -51,19 +53,22 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     private func layoutOrbs()
     {
-        let orbDataMatrix = level.orbDataMatrix
+        let orbColorMatrix = level.orbColorMatrix
         
-        for row in 0..<orbDataMatrix.count
+        for row in 0..<orbColorMatrix.count
         {
             var currentRow = Array<Orb>()
             
-            for col in 0..<orbDataMatrix[row].count
+            for col in 0..<orbColorMatrix[row].count
             {
-                let currentOrb = Orb(color: orbDataMatrix[row][col].color)
-                currentOrb.position = getOrbCoordinate(row, col)
+                if orbColorMatrix[row][col] != ""
+                {
+                    let currentOrb = Orb(color: orbColorMatrix[row][col])
+                    currentOrb.position = getOrbCoordinate(row, col)
                 
-                currentRow.append(currentOrb)
-                self.addChild(currentOrb)
+                    currentRow.append(currentOrb)
+                    self.addChild(currentOrb)
+                }
             }
             
             orbMatrix.append(currentRow)
@@ -73,11 +78,16 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     override func didMove(to view: SKView)
     {
         backgroundColor = SKColor.black
+        
+        // Set up arrow rotation anchor
+        arrowAnchor.position = CGPoint(x: self.frame.midX, y: self.frame.minY)
+        
         //shoot button created
         print("Shoot arrow created")
         imgArrow.name = "imgArrow"
-        imgArrow.position = CGPoint(x:self.frame.midX, y:self.frame.minY+130)
-        self.addChild(imgArrow)
+        imgArrow.position = CGPoint(x: 0, y: 130)
+        arrowAnchor.addChild(imgArrow)
+        self.addChild(arrowAnchor)
         
         //Barrier one image created
 
@@ -99,10 +109,10 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
         //Barrier one image created
         print("Barrier image created")
-        btnReserve.size = CGSize(width: 200, height: 200 )
+        btnReserve.size = CGSize(width: 80, height: 80 )
         btnReserve.name = "btnReserve"
         btnReserve.color = SKColor.white
-        btnReserve.position = CGPoint(x:self.frame.maxX-100, y:self.frame.minY+100)
+        btnReserve.position = CGPoint(x:self.frame.maxX-40, y:self.frame.minY+40)
         self.addChild(btnReserve)
         
         // set the physical world
@@ -128,14 +138,41 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t: AnyObject in touches {
-            
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    {
+    }
+    
+    private func clamp(_ value: CGFloat) -> CGFloat
+    {
+        if value > CGFloat(0)
+        {
+            return CGFloat(1)
+        }
+        else
+        {
+            return CGFloat(-1)
         }
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?)
+    {
+        for touch in touches
+        {
+            let pointOfTouch = touch.location(in: self)
+            let previousPointOfTouch = touch.previousLocation(in: self)
+            let dragDirection = clamp(pointOfTouch.x - previousPointOfTouch.x)
+            let rotationAngle = -(dragDirection * .pi/90)
+            
+            if (arrowAnchor.zRotation + rotationAngle > (52 * .pi/180) )
+            {
+                arrowAnchor.zRotation = (52 * .pi/180)
+            }else if (arrowAnchor.zRotation + rotationAngle < (-52 * .pi/180)){
+                arrowAnchor.zRotation = (-52 * .pi/180)
+            }else{
+                arrowAnchor.zRotation += rotationAngle
+                print(arrowAnchor.zRotation)
+            }
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
