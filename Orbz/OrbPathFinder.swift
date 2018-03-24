@@ -11,11 +11,12 @@ import SpriteKit
 import GameplayKit
 
 func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
-    let x = ((maxX/2)-35) *
-    var direction = CGVector(dx: ((maxX/2)-35),dy: arrowLoc.y)
-    if arrowLoc.x == (maxX/2){
+    let x = 1 * cos(angle + .pi/2)
+    let y = 1 * sin(angle + .pi/2)
+    var direction = CGVector(dx: x,dy: y)
+    if x == 0{
         // compute the real destination for the projectile
-        let realDest = realDestination(orb.position, endPoint: arrowLoc)
+        let realDest = realDestination(orb.position, endPoint: CGPoint(x: (maxX/2), y: maxY))
         
         // 9 - Create the actions
         let actionMove = SKAction.move(to: realDest, duration: 2.0)
