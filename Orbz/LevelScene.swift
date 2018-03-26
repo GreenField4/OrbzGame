@@ -22,19 +22,19 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     var shouldCountFramesSinceLastTap = false
     var reserveOrb: Orb?
     let frameTimerLimit = 5
-    var orbMatrix = Array<Array<Orb>>()
+    var orbMatrix: [[Orb?]] = Array(repeating: Array(repeating: nil, count: 15), count: 8)
     
     // Calculate screen position from row and column indices
     private func getOrbCoordinate(_ row: Int, _ col: Int) -> CGPoint
     {
-        var orbX = (CGFloat(col) * GameConstants.OrbWidth / 1.2) + (GameConstants.OrbWidth / 2)
+        var orbX = (CGFloat(row) * GameConstants.OrbWidth / 1.2) + (GameConstants.OrbWidth / 2)
         
-        if (row % 2 == 0)
+        if (col % 2 == 0)
         {
             orbX += GameConstants.OrbWidth / 2.35
         }
         
-        let orbY = size.height - (GameConstants.OrbHeight / 2) - CGFloat(row * Int(GameConstants.OrbHeight - 8))
+        let orbY = size.height - (GameConstants.OrbHeight / 2) - CGFloat(col * Int(GameConstants.OrbHeight - 15))
         
         return CGPoint(x: orbX, y: orbY)
     }
@@ -42,15 +42,46 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     // Calculate row and column indices from screen position
     private func getGridPosition(_ x: CGFloat, _ y: CGFloat) -> CGPoint
     {
-        let gridY = floor(y / GameConstants.RowHeight)
+        var gridY = floor(y / GameConstants.RowHeight)
+        print("grid system")
         var xOffset = CGFloat(0)
         
-        if ((gridY + GameConstants.RowOffset).truncatingRemainder(dividingBy: 2) == 0)
+        if ((gridY).truncatingRemainder(dividingBy: 2) == 1)
         {
-            xOffset = GameConstants.OrbWidth / 2
+            xOffset += GameConstants.OrbWidth / 2
         }
         
-        let gridX = floor((x - xOffset) / GameConstants.OrbWidth)
+        print(xOffset)
+        var gridX = floor((x + xOffset) / GameConstants.OrbWidth)
+        print(gridX)
+        print(gridY)
+        
+        if orbMatrix[Int(gridX)][Int(gridY)] != nil{
+            print("boss")
+            
+//            if Int(gridY + 1) < orbMatrix.count && orbMatrix[Int(gridX)][Int(gridY + 1)] == nil
+//            {
+//                gridY += 1
+//            }
+            
+            if (gridX+1 >= 0) && orbMatrix[Int(gridX + 1)][Int(gridY)] == nil
+            {
+                gridX += 1
+            }
+            else if (Int(gridX - 1) < orbMatrix[0].count) && orbMatrix[Int(gridX - 1)][Int(gridY)] == nil
+            {
+                gridX += -1
+            }
+            else
+            {
+                gridY += 1
+            }
+ 
+            print("Modified by boss")
+            print(gridX)
+            print(gridY)
+            
+        }
         
         return CGPoint(x: gridX, y: gridY)
     }
@@ -61,23 +92,22 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
         for row in 0..<orbColorMatrix.count
         {
-            var currentRow = Array<Orb>()
-            
             for col in 0..<orbColorMatrix[row].count
             {
                 if orbColorMatrix[row][col] != ""
                 {
                     colorsUsed.append(orbColorMatrix[row][col])
                     let currentOrb = Orb(color: orbColorMatrix[row][col], stuck: true)
-                    currentOrb.position = getOrbCoordinate(row, col)
+                    currentOrb.position = getOrbCoordinate(col, row)
                 
-                    currentRow.append(currentOrb)
+                    orbMatrix[row][col] = currentOrb
                     self.addChild(currentOrb)
                 }
             }
-            
-            orbMatrix.append(currentRow)
         }
+        
+        print("Orb [0][0] X: \(orbMatrix[0][0]!.position.x)")
+        print("Orb [0][1] X: \(orbMatrix[1][0]!.position.x)")
     }
     
     private func moveToNextLevel()
@@ -131,39 +161,23 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
         if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.StuckOrb != 0)
         {
-            // Recently shot orb to grid orb collision
-//            let xCenter = bodyA.node!.position.x + (GameConstants.OrbWidth / 2)
-//            let yCenter = bodyA.node!.position.y + (GameConstants.OrbHeight / 2)
-//            let gridPosition = getGridPosition(xCenter, yCenter)
-//
-//            print("Grid X \(gridPosition.x), Grid Y \(gridPosition.y)")
             print("Orbs colliding")
-            for row in 0..<orbMatrix.count
-            {
-                for col in 0..<orbMatrix[row].count
-                {
-                    if orbMatrix[row][col].position == (bodyB.node as! Orb).position
-                    {
-                        let collidingOrb = bodyA.node as! Orb
-                        collidingOrb.setOrbStuck(true)
-                        
-                        if row == orbMatrix.count - 1
-                        {
-                            var newRow = Array<Orb>()
-                            collidingOrb.position = getOrbCoordinate(row + 1, col)
-                            collidingOrb.removeAllActions()
-                            newRow.append(collidingOrb)
-                            orbMatrix.append(newRow)
-                        }
-                        else
-                        {
-                            collidingOrb.removeAllActions()
-                            collidingOrb.position = getOrbCoordinate(row, col)
-                            orbMatrix[row].append(collidingOrb)
-                        }
-                    }
-                }
-            }
+            
+            // Stop orb movement and change its collision category
+            let collidingOrb = bodyA.node as! Orb
+            collidingOrb.setOrbStuck(true)
+
+            let xCenter = collidingOrb.position.x //+ GameConstants.OrbWidth / 4
+            let yCenter = self.frame.maxY - collidingOrb.position.y //+ GameConstants.OrbHeight / 70
+            
+            // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
+            let pos = getGridPosition(xCenter, yCenter)
+            
+            
+            collidingOrb.removeFromParent()
+            orbMatrix[Int(pos.x)][Int(pos.y)] = collidingOrb
+            collidingOrb.position = getOrbCoordinate(Int(pos.x), Int(pos.y))
+            self.addChild(collidingOrb)
         }
         
         if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.Barrier != 0)

@@ -12,20 +12,19 @@ import SpriteKit
 class Orb: SKSpriteNode
 {
     let colour: String
-    var stuck: Bool
     
     init(color: String, stuck: Bool = false)
     {
-        self.stuck = stuck
         self.colour = color
         let texture = GameConstants.orbTextureAtlas.textureNamed(color)
-        super.init(texture: texture, color: SKColor.clear, size: CGSize(width: texture.size().width / 2, height: texture.size().height / 2))
+        super.init(texture: texture, color: SKColor.clear, size: CGSize(width: texture.size().width / 1.2, height: texture.size().height / 1.2))
         
-        self.physicsBody = SKPhysicsBody(texture: self.texture!,size:self.size)
+        //self.physicsBody = SKPhysicsBody(texture: self.texture!,size:self.size)
+        self.physicsBody = SKPhysicsBody(circleOfRadius: GameConstants.OrbWidth / 2.25)
         self.physicsBody?.isDynamic = true
-        self.physicsBody?.usesPreciseCollisionDetection = false
+        self.physicsBody?.usesPreciseCollisionDetection = true
         
-        if self.stuck
+        if stuck
         {
             self.physicsBody?.categoryBitMask = GameConstants.CollisionCategories.StuckOrb
             self.physicsBody?.contactTestBitMask = GameConstants.CollisionCategories.Orb
@@ -44,7 +43,7 @@ class Orb: SKSpriteNode
     
     public func setOrbStuck(_ stuck: Bool)
     {
-        self.stuck = stuck
+        self.removeAllActions()
         self.physicsBody?.categoryBitMask = GameConstants.CollisionCategories.StuckOrb
         self.physicsBody?.contactTestBitMask = GameConstants.CollisionCategories.Orb
     }
@@ -52,14 +51,12 @@ class Orb: SKSpriteNode
     override func encode(with aCoder: NSCoder)
     {
         aCoder.encode(colour, forKey: "colour")
-        aCoder.encode(stuck, forKey: "stuck")
         super.encode(with: aCoder)
     }
     
     required init?(coder aDecoder: NSCoder)
     {
         self.colour = aDecoder.decodeObject(forKey: "colour") as! String
-        self.stuck = aDecoder.decodeBool(forKey:  "stuck")
         super.init(coder: aDecoder)
     }
 }
