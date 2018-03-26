@@ -27,4 +27,14 @@ struct GameConstants
     public static let OrbHeight = redOrbTexture.size.height / 2
     public static let RowOffset = CGFloat(2)
     public static let RowHeight = CGFloat(0)
+    
+    struct CollisionCategories
+    {
+        private init() {}
+        
+        static let None: UInt32 = 0
+        static let Orb: UInt32 = 0x1 << 0
+        static let StuckOrb: UInt32 = 0x1 << 1
+        static let Barrier: UInt32 = 0x1 << 2
+    }
 }

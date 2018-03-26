@@ -25,7 +25,6 @@
 		AB849C9520658D920006BDD7 /* levels.json in Resources */ = {isa = PBXBuildFile; fileRef = AB849C9420658D920006BDD7 /* levels.json */; };
 		AB849C9B20659DAB0006BDD7 /* LevelScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9A20659DAB0006BDD7 /* LevelScene.swift */; };
 		AB849C9D2065AABA0006BDD7 /* ControlScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9C2065AABA0006BDD7 /* ControlScene.swift */; };
-		AB849C9F2065B9DA0006BDD7 /* PhysicsCatagory.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849C9E2065B9DA0006BDD7 /* PhysicsCatagory.swift */; };
 		AB849CA12065CBF10006BDD7 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849CA02065CBF10006BDD7 /* Geometry.swift */; };
 		AB849CA32065CC970006BDD7 /* OrbPathFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB849CA22065CC970006BDD7 /* OrbPathFinder.swift */; };
 /* End PBXBuildFile section */
@@ -72,7 +71,6 @@
 		AB849C9420658D920006BDD7 /* levels.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = levels.json; sourceTree = "<group>"; };
 		AB849C9A20659DAB0006BDD7 /* LevelScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelScene.swift; sourceTree = "<group>"; };
 		AB849C9C2065AABA0006BDD7 /* ControlScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlScene.swift; sourceTree = "<group>"; };
-		AB849C9E2065B9DA0006BDD7 /* PhysicsCatagory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCatagory.swift; sourceTree = "<group>"; };
 		AB849CA02065CBF10006BDD7 /* Geometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		AB849CA22065CC970006BDD7 /* OrbPathFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbPathFinder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -142,7 +140,6 @@
 				AB4B540520645D8C00421D6E /* Info.plist */,
 				AB4B54272064606700421D6E /* GameVariables.swift */,
 				AB849C9C2065AABA0006BDD7 /* ControlScene.swift */,
-				AB849C9E2065B9DA0006BDD7 /* PhysicsCatagory.swift */,
 				AB849CA02065CBF10006BDD7 /* Geometry.swift */,
 				AB849CA22065CC970006BDD7 /* OrbPathFinder.swift */,
 			);
@@ -309,7 +306,6 @@
 				AB849CA12065CBF10006BDD7 /* Geometry.swift in Sources */,
 				AB4B54282064606700421D6E /* GameVariables.swift in Sources */,
 				AB849C9D2065AABA0006BDD7 /* ControlScene.swift in Sources */,
-				AB849C9F2065B9DA0006BDD7 /* PhysicsCatagory.swift in Sources */,
 				AB4B53FC20645D8C00421D6E /* GameViewController.swift in Sources */,
 				4592736B2065CC2A0032A4FB /* GameConstants.swift in Sources */,
 				AB849C9B20659DAB0006BDD7 /* LevelScene.swift in Sources */,

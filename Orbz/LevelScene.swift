@@ -68,7 +68,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 if orbColorMatrix[row][col] != ""
                 {
                     colorsUsed.append(orbColorMatrix[row][col])
-                    let currentOrb = Orb(color: orbColorMatrix[row][col])
+                    let currentOrb = Orb(color: orbColorMatrix[row][col], stuck: true)
                     currentOrb.position = getOrbCoordinate(row, col)
                 
                     currentRow.append(currentOrb)
@@ -113,6 +113,65 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         //orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
     }
     
+    func didBegin(_ contact: SKPhysicsContact)
+    {
+        var bodyA: SKPhysicsBody
+        var bodyB: SKPhysicsBody
+        
+        if contact.bodyA.categoryBitMask < contact.bodyB.categoryBitMask
+        {
+            bodyA = contact.bodyA
+            bodyB = contact.bodyB
+        }
+        else
+        {
+            bodyA = contact.bodyB
+            bodyB = contact.bodyA
+        }
+        
+        if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.StuckOrb != 0)
+        {
+            // Recently shot orb to grid orb collision
+//            let xCenter = bodyA.node!.position.x + (GameConstants.OrbWidth / 2)
+//            let yCenter = bodyA.node!.position.y + (GameConstants.OrbHeight / 2)
+//            let gridPosition = getGridPosition(xCenter, yCenter)
+//
+//            print("Grid X \(gridPosition.x), Grid Y \(gridPosition.y)")
+            print("Orbs colliding")
+            for row in 0..<orbMatrix.count
+            {
+                for col in 0..<orbMatrix[row].count
+                {
+                    if orbMatrix[row][col].position == (bodyB.node as! Orb).position
+                    {
+                        let collidingOrb = bodyA.node as! Orb
+                        collidingOrb.setOrbStuck(true)
+                        
+                        if row == orbMatrix.count - 1
+                        {
+                            var newRow = Array<Orb>()
+                            collidingOrb.position = getOrbCoordinate(row + 1, col)
+                            collidingOrb.removeAllActions()
+                            newRow.append(collidingOrb)
+                            orbMatrix.append(newRow)
+                        }
+                        else
+                        {
+                            collidingOrb.removeAllActions()
+                            collidingOrb.position = getOrbCoordinate(row, col)
+                            orbMatrix[row].append(collidingOrb)
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.Barrier != 0)
+        {
+            // Orb - Barrier collision
+        }
+    }
+    
     override func didMove(to view: SKView)
     {
         backgroundColor = SKColor.black
@@ -147,9 +206,9 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         imgBarrier.position = CGPoint(x:self.frame.midX, y:self.frame.midY + self.frame.maxY-1)
         imgBarrier.physicsBody = SKPhysicsBody() // define boundary of body
         imgBarrier.physicsBody?.isDynamic = true // 2
-        imgBarrier.physicsBody?.categoryBitMask = PhysicsCategory.Barrier //
-        imgBarrier.physicsBody?.contactTestBitMask = PhysicsCategory.Orb  // Contact with bullet
-        imgBarrier.physicsBody?.collisionBitMask = PhysicsCategory.None // No bouncing on collision
+        imgBarrier.physicsBody?.categoryBitMask = GameConstants.CollisionCategories.Barrier //
+        imgBarrier.physicsBody?.contactTestBitMask = GameConstants.CollisionCategories.Orb  // Contact with bullet
+        imgBarrier.physicsBody?.collisionBitMask = GameConstants.CollisionCategories.None // No bouncing on collision
         self.addChild(imgBarrier)
         
         //Barrier one image created
