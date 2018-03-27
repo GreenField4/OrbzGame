@@ -23,10 +23,13 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
         var scalor = abs(((maxX/2)-GameConstants.OrbWidth/2)/direction.dx)
         if (scalor * direction.dy) > maxY{
             scalor = abs((maxY-GameConstants.OrbWidth/2)/direction.dy)
-        } else if (scalor * direction.dy) > (maxY/2){
-            speed = 1.75
-        }
+        } /*else if (scalor * direction.dy) > (maxY/2){
+            speed = 1.5
+        } else {
+            speed = 1
+        }*/
         direction =  CGVector(dx: direction.dx * scalor,dy: direction.dy * scalor)
+        speed = speed / Double(maxY/direction.dy)
         let initalMove = SKAction.moveBy(x: direction.dx, y: direction.dy, duration: TimeInterval(speed))
         direction = CGVector(dx: (direction.dx * 2),dy: direction.dy * 2)
         let revDirection = CGVector(dx: 0 - direction.dx,dy: direction.dy)
@@ -37,4 +40,30 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
         }
         orb.run(SKAction.sequence([initalMove, missAction]))
     }
+}
+
+func dropper(barrier : SKSpriteNode, orbMatrix : Array<Array<Orb?>>, dropRate : CGFloat) {
+    let drop = SKAction.moveBy(x: 0, y:  0 - dropRate, duration: 0.1)
+    for i in (0...orbMatrix.count - 1){
+        for j in (0...orbMatrix[i].count - 1){
+            if orbMatrix[i][j] != nil{
+                orbMatrix[i][j]?.run(drop)
+            }
+            
+        }
+    }
+    barrier.run(drop)
+}
+
+func loseCheck(orbMatrix : Array<Array<Orb?>>, loseLine : CGFloat) -> Bool{
+    for i in (0...orbMatrix.count - 1){
+        for j in (0...orbMatrix[i].count - 1){
+            if orbMatrix[i][j] != nil{
+                if (orbMatrix[i][j]?.position.y)! <= loseLine {
+                    return true
+                }
+            }
+        }
+    }
+    return false
 }
