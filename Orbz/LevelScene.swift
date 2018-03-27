@@ -182,7 +182,21 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
         if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.Barrier != 0)
         {
-            // Orb - Barrier collision
+            print("ORB -> BARRIER")
+            let collidingOrb = bodyA.node as! Orb
+            collidingOrb.setOrbStuck(true)
+            
+            let xCenter = collidingOrb.position.x //+ GameConstants.OrbWidth / 4
+            let yCenter = self.frame.maxY - collidingOrb.position.y //+ GameConstants.OrbHeight / 70
+            
+            // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
+            let pos = getGridPosition(xCenter, yCenter)
+            
+            
+            collidingOrb.removeFromParent()
+            orbMatrix[Int(pos.x)][Int(pos.y)] = collidingOrb
+            collidingOrb.position = getOrbCoordinate(Int(pos.x), Int(pos.y))
+            self.addChild(collidingOrb)
         }
     }
     
@@ -218,11 +232,11 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         imgBarrier.name = "imgBarrier"
         imgBarrier.color = SKColor.darkGray
         imgBarrier.position = CGPoint(x:self.frame.midX, y:self.frame.midY + self.frame.maxY-1)
-        imgBarrier.physicsBody = SKPhysicsBody() // define boundary of body
+        imgBarrier.physicsBody = SKPhysicsBody(rectangleOf: imgBarrier.size) // define boundary of body
         imgBarrier.physicsBody?.isDynamic = true // 2
         imgBarrier.physicsBody?.categoryBitMask = GameConstants.CollisionCategories.Barrier //
         imgBarrier.physicsBody?.contactTestBitMask = GameConstants.CollisionCategories.Orb  // Contact with bullet
-        imgBarrier.physicsBody?.collisionBitMask = GameConstants.CollisionCategories.None // No bouncing on collision
+        imgBarrier.physicsBody?.collisionBitMask = 0x0 // No bouncing on collision
         self.addChild(imgBarrier)
         
         //Barrier one image created
