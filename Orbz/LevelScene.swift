@@ -68,7 +68,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             {
                 gridX += 1
             }
-            else if (Int(gridX - 1) < orbMatrix[0].count) && orbMatrix[Int(gridX - 1)][Int(gridY)] == nil
+            else if (Int(gridX - 1) >= 0 && (Int(gridX - 1)) < orbMatrix[0].count) && orbMatrix[Int(gridX - 1)][Int(gridY)] == nil
             {
                 gridX += -1
             }
@@ -154,36 +154,47 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         }
     }
     
-    private func getOrbNeighbours(_ orb: Orb) -> Array<Orb>
+    private func getOrbNeighbours(_ orb: Orb, matchColour: Bool) -> Array<Orb>
     {
         var neighbourOrbs = Array<Orb>()
-        let posInMatrix = getGridPosition(orb.position.x, orb.position.y)
+        let posInMatrix = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y)
         let orbX = Int(posInMatrix.x)
         let orbY = Int(posInMatrix.y)
         
-        let neighbourOffsets: [[Int]]
+//        let neighbourOffsets: [[Int]]
         
-        if orbX % 2 == 0
-        {
-            // Checking for an even row orb
-            neighbourOffsets = GameConstants.NeighbourOffsetTable[0]
-        }
-        else
-        {
-            // Checking for an odd row orb
-            neighbourOffsets = GameConstants.NeighbourOffsetTable[1]
-        }
+//        if orbX % 2 == 0
+//        {
+//            // Checking for an even row orb
+//            neighbourOffsets = GameConstants.NeighbourOffsetTable[0]
+//        }
+//        else
+//        {
+//            // Checking for an odd row orb
+//            neighbourOffsets = GameConstants.NeighbourOffsetTable[1]
+//        }
         
-        for i in 0..<neighbourOffsets.count
+//        for i in 0..<neighbourOffsets.count
+        for i in 0..<GameConstants.NeighbourOffsetTable.count
         {
-            let neighbourX = orbX + neighbourOffsets[i][0]
-            let neighbourY = orbY + neighbourOffsets[i][1]
+//            let neighbourX = orbX + neighbourOffsets[i][0]
+//            let neighbourY = orbY + neighbourOffsets[i][1]
+            let neighbourX = orbX + GameConstants.NeighbourOffsetTable[i][0]
+            let neighbourY = orbY + GameConstants.NeighbourOffsetTable[i][1]
+//            print("Orb X: \(orbX)")
+//            print("Orb Y: \(orbY)")
+//            print("Neighbour X: \(neighbourX)")
+//            print("Neighbour Y: \(neighbourY)")
             
-            if neighbourX < orbMatrix.count && neighbourY < orbMatrix[0].count
+            if (neighbourX >= 0 && neighbourX < orbMatrix.count) && (neighbourY >= 0 && neighbourY < orbMatrix[0].count)
             {
                 if let neighbour = orbMatrix[neighbourX][neighbourY]
                 {
-                    neighbourOrbs.append(neighbour)
+                    if !matchColour || (neighbour.colour == orb.colour)
+                    {
+                        print("Found neighbour")
+                        neighbourOrbs.append(neighbour)
+                    }
                 }
             }
         }
@@ -199,28 +210,31 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             resetClusterCheck()
         }
         
-        let startingOrb = orbMatrix[x][y] as! Orb
-        startingOrb.checkedForCluster = true
-        var orbsToProcess = Array<Orb>()
-        orbsToProcess.append(startingOrb)
         var foundCluster = Array<Orb>()
         
-        while orbsToProcess.count > 0
+        if let startingOrb = orbMatrix[x][y]
         {
-            let currentOrb = orbsToProcess.removeLast()
+            startingOrb.checkedForCluster = true
+            var orbsToProcess = Array<Orb>()
+            orbsToProcess.append(startingOrb)
             
-            if !currentOrb.checkedForCluster
+            while orbsToProcess.count > 0
             {
+                print("Getting current orb to check")
+                let currentOrb = orbsToProcess.removeLast()
+                
                 if !matchColour || (currentOrb.colour == startingOrb.colour)
                 {
                     foundCluster.append(currentOrb)
                     
-                    let neighbourOrbs = getOrbNeighbours(currentOrb)
-                    
+                    let neighbourOrbs = getOrbNeighbours(currentOrb, matchColour: matchColour)
+                    print("Num neighbours: \(neighbourOrbs.count)")
                     for neighbour in neighbourOrbs
                     {
+                        print("neighbour checked: \(neighbour.checkedForCluster)")
                         if !neighbour.checkedForCluster
                         {
+                            print("Adding neighbour to process queue")
                             orbsToProcess.append(neighbour)
                             neighbour.checkedForCluster = true
                         }
@@ -319,9 +333,30 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             self.addChild(collidingOrb)
             
             let cluster = findOrbCluster(Int(pos.x), Int(pos.y), matchColour: true, reset: true)
-            if cluster.count > 0
+            
+            print("Cluster size: \(cluster.count)")
+            if cluster.count >= 3
             {
                 print("cluster detected")
+                
+                for orb in cluster
+                {
+                    let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y)
+                    orb.removeFromParent()
+                    orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
+                }
+                
+                let floatingClusters = findFloatingClusters()
+                
+                for cluster in floatingClusters
+                {
+                    for orb in cluster
+                    {
+                        let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y)
+                        orb.removeFromParent()
+                        orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
+                    }
+                }
             }
         }
         
@@ -342,6 +377,33 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             orbMatrix[Int(pos.x)][Int(pos.y)] = collidingOrb
             collidingOrb.position = getOrbCoordinate(Int(pos.x), Int(pos.y))
             self.addChild(collidingOrb)
+            
+            let cluster = findOrbCluster(Int(pos.x), Int(pos.y), matchColour: true, reset: true)
+            
+            print("Cluster size: \(cluster.count)")
+            if cluster.count >= 3
+            {
+                print("cluster detected")
+                
+                for orb in cluster
+                {
+                    let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y)
+                    orb.removeFromParent()
+                    orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
+                }
+                
+                let floatingClusters = findFloatingClusters()
+                
+                for cluster in floatingClusters
+                {
+                    for orb in cluster
+                    {
+                        let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y)
+                        orb.removeFromParent()
+                        orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
+                    }
+                }
+            }
         }
     }
     
