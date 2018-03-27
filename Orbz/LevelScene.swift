@@ -143,6 +143,145 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         //orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
     }
     
+    private func resetClusterCheck()
+    {
+        for row in orbMatrix
+        {
+            for orb in row
+            {
+                orb?.checkedForCluster = false
+            }
+        }
+    }
+    
+    private func getOrbNeighbours(_ orb: Orb) -> Array<Orb>
+    {
+        var neighbourOrbs = Array<Orb>()
+        let posInMatrix = getGridPosition(orb.position.x, orb.position.y)
+        let orbX = Int(posInMatrix.x)
+        let orbY = Int(posInMatrix.y)
+        
+        let neighbourOffsets: [[Int]]
+        
+        if orbX % 2 == 0
+        {
+            // Checking for an even row orb
+            neighbourOffsets = GameConstants.NeighbourOffsetTable[0]
+        }
+        else
+        {
+            // Checking for an odd row orb
+            neighbourOffsets = GameConstants.NeighbourOffsetTable[1]
+        }
+        
+        for i in 0..<neighbourOffsets.count
+        {
+            let neighbourX = orbX + neighbourOffsets[i][0]
+            let neighbourY = orbY + neighbourOffsets[i][1]
+            
+            if neighbourX < orbMatrix.count && neighbourY < orbMatrix[0].count
+            {
+                if let neighbour = orbMatrix[neighbourX][neighbourY]
+                {
+                    neighbourOrbs.append(neighbour)
+                }
+            }
+        }
+        
+        return neighbourOrbs
+    }
+    
+    // Search for orb clusters in the matrix starting from a specified location
+    private func findOrbCluster(_ x: Int, _ y: Int, matchColour: Bool, reset: Bool) -> Array<Orb>
+    {
+        if reset
+        {
+            resetClusterCheck()
+        }
+        
+        let startingOrb = orbMatrix[x][y] as! Orb
+        startingOrb.checkedForCluster = true
+        var orbsToProcess = Array<Orb>()
+        orbsToProcess.append(startingOrb)
+        var foundCluster = Array<Orb>()
+        
+        while orbsToProcess.count > 0
+        {
+            let currentOrb = orbsToProcess.removeLast()
+            
+            if !currentOrb.checkedForCluster
+            {
+                if !matchColour || (currentOrb.colour == startingOrb.colour)
+                {
+                    foundCluster.append(currentOrb)
+                    
+                    let neighbourOrbs = getOrbNeighbours(currentOrb)
+                    
+                    for neighbour in neighbourOrbs
+                    {
+                        if !neighbour.checkedForCluster
+                        {
+                            orbsToProcess.append(neighbour)
+                            neighbour.checkedForCluster = true
+                        }
+                    }
+                }
+            }
+        }
+        
+        return foundCluster
+    }
+    
+    // Searches for orb clusters that are "floating"
+    // i.e. not attached to the ceiling or any other row
+    private func findFloatingClusters() -> Array<Array<Orb>>
+    {
+        resetClusterCheck()
+        var allClusters = Array<Array<Orb>>()
+        
+        for i in 0..<orbMatrix.count
+        {
+            for j in 0..<orbMatrix[i].count
+            {
+                if let currentOrb = orbMatrix[i][j]
+                {
+                    if !currentOrb.checkedForCluster
+                    {
+                        let currentCluster = findOrbCluster(i, j, matchColour: false, reset: false)
+                        
+                        if currentCluster.count > 0
+                        {
+                            var clusterFloating = true
+                            var k = 0
+                            
+                            while k < currentCluster.count && clusterFloating
+                            {
+                                for topRowOrb in orbMatrix[0]
+                                {
+                                    if topRowOrb != nil && currentCluster[k].position == topRowOrb!.position
+                                    {
+                                        // The orb is attached to the ceiling, therefore not floating
+                                        clusterFloating = false
+                                        break
+                                    }
+                                }
+                                
+                                k += 1
+                            }
+                            
+                            if clusterFloating
+                            {
+                                allClusters.append(currentCluster)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return allClusters
+    }
+    
     func didBegin(_ contact: SKPhysicsContact)
     {
         var bodyA: SKPhysicsBody
@@ -178,6 +317,12 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             orbMatrix[Int(pos.x)][Int(pos.y)] = collidingOrb
             collidingOrb.position = getOrbCoordinate(Int(pos.x), Int(pos.y))
             self.addChild(collidingOrb)
+            
+            let cluster = findOrbCluster(Int(pos.x), Int(pos.y), matchColour: true, reset: true)
+            if cluster.count > 0
+            {
+                print("cluster detected")
+            }
         }
         
         if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.Barrier != 0)

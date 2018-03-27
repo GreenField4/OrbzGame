@@ -12,11 +12,13 @@ import SpriteKit
 class Orb: SKSpriteNode
 {
     let colour: String
+    var checkedForCluster: Bool // Whether or not this orb has already been considered in cluster checks
     
-    init(color: String, stuck: Bool = false)
+    init(color: String, stuck: Bool = false, checked: Bool = false)
     {
         self.colour = color
         let texture = GameConstants.orbTextureAtlas.textureNamed(color)
+        self.checkedForCluster = checked
         super.init(texture: texture, color: SKColor.clear, size: CGSize(width: texture.size().width / 1.2, height: texture.size().height / 1.2))
         
         //self.physicsBody = SKPhysicsBody(texture: self.texture!,size:self.size)
@@ -48,15 +50,18 @@ class Orb: SKSpriteNode
         self.physicsBody?.contactTestBitMask = GameConstants.CollisionCategories.Orb
     }
     
+    
     override func encode(with aCoder: NSCoder)
     {
         aCoder.encode(colour, forKey: "colour")
+        aCoder.encode(checkedForCluster, forKey: "checked")
         super.encode(with: aCoder)
     }
     
     required init?(coder aDecoder: NSCoder)
     {
         self.colour = aDecoder.decodeObject(forKey: "colour") as! String
+        self.checkedForCluster = aDecoder.decodeBool(forKey: "checked")
         super.init(coder: aDecoder)
     }
 }
