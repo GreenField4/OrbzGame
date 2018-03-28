@@ -22,19 +22,19 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     var shouldCountFramesSinceLastTap = false
     var reserveOrb: Orb?
     let frameTimerLimit = 5
-    var orbMatrix: [[Orb?]] = Array(repeating: Array(repeating: nil, count: 15), count: 8)
+    var orbMatrix: [[Orb?]] = Array(repeating: Array(repeating: nil, count: 8), count: 15)
     
     // Calculate screen position from row and column indices
     private func getOrbCoordinate(_ row: Int, _ col: Int) -> CGPoint
     {
-        var orbX = (CGFloat(row) * GameConstants.OrbWidth / 1.2) + (GameConstants.OrbWidth / 2)
+        var orbX = (CGFloat(col) * GameConstants.OrbWidth / 1.2) + (GameConstants.OrbWidth / 2)
         
-        if (col % 2 == 0)
+        if (row % 2 == 0)
         {
             orbX += GameConstants.OrbWidth / 2.35
         }
         
-        let orbY = size.height - (GameConstants.OrbHeight / 2) - CGFloat(col * Int(GameConstants.OrbHeight - 15))
+        let orbY = size.height - (GameConstants.OrbHeight / 2) - CGFloat(row * Int(GameConstants.OrbHeight - 15))
         
         return CGPoint(x: orbX, y: orbY)
     }
@@ -42,8 +42,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     // Calculate row and column indices from screen position
     private func getGridPosition(_ x: CGFloat, _ y: CGFloat, forInsertion: Bool = true) -> CGPoint
     {
-        var gridY = floor(y / GameConstants.RowHeight)
-        print("grid system")
+        var gridY = floor(abs(y) / GameConstants.RowHeight)
+        //print("grid system")
         var xOffset = CGFloat(0)
         
         if ((gridY).truncatingRemainder(dividingBy: 2) == 1)
@@ -51,25 +51,25 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             xOffset += GameConstants.OrbWidth / 2
         }
         
-        print(xOffset)
+        //print(xOffset)
         var gridX = floor((x + xOffset) / GameConstants.OrbWidth)
-        print(gridX)
-        print(gridY)
+        //print(gridX)
+        //print(gridY)
         
         // Only run this when we're trying to force a new Orb into the matrix instead of a simple lookup
         if forInsertion && (orbMatrix[Int(gridX)][Int(gridY)] != nil){
-            print("boss")
+            //print("boss")
             
 //            if Int(gridY + 1) < orbMatrix.count && orbMatrix[Int(gridX)][Int(gridY + 1)] == nil
 //            {
 //                gridY += 1
 //            }
             
-            if (gridX+1 >= 0) && orbMatrix[Int(gridX + 1)][Int(gridY)] == nil
+            if (gridX+1 >= 0)  && ((Int(gridX + 1)) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX + 1)] == nil
             {
                 gridX += 1
             }
-            else if (Int(gridX - 1) >= 0 && (Int(gridX - 1)) < orbMatrix[0].count) && orbMatrix[Int(gridX - 1)][Int(gridY)] == nil
+            else if (Int(gridX - 1) >= 0 && (Int(gridX - 1)) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX)] == nil
             {
                 gridX += -1
             }
@@ -78,9 +78,9 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 gridY += 1
             }
  
-            print("Modified by boss")
-            print(gridX)
-            print(gridY)
+            
+            //print(gridX)
+            //print(gridY)
             
         }
         
@@ -99,7 +99,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 {
                     colorsUsed.append(orbColorMatrix[row][col])
                     let currentOrb = Orb(color: orbColorMatrix[row][col], stuck: true)
-                    currentOrb.position = getOrbCoordinate(col, row)
+                    currentOrb.position = getOrbCoordinate(row, col)
                 
                     orbMatrix[row][col] = currentOrb
                     self.addChild(currentOrb)
@@ -182,10 +182,12 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             let neighbourY = orbY + neighbourOffsets[i][1]
 //            let neighbourX = orbX + GameConstants.NeighbourOffsetTable[i][0]
 //            let neighbourY = orbY + GameConstants.NeighbourOffsetTable[i][1]
-            
+            print(neighbourX)
+            print(neighbourY)
             if (neighbourX >= 0 && neighbourX < orbMatrix.count) && (neighbourY >= 0 && neighbourY < orbMatrix[0].count)
             {
-                if let neighbour = orbMatrix[neighbourX][neighbourY]
+                print(orbMatrix[neighbourY][neighbourX]?.colour)
+                if let neighbour = orbMatrix[neighbourY][neighbourX]
                 {
                     if !matchColour || (neighbour.colour == orb.colour)
                     {
@@ -217,6 +219,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             while orbsToProcess.count > 0
             {
+                print("new loop")
+                print(orbsToProcess.count)
 //                print("Getting current orb to check")
                 let currentOrb = orbsToProcess.removeLast()
                 
@@ -228,11 +232,14 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
 //                    print("Num neighbours: \(neighbourOrbs.count)")
                     for neighbour in neighbourOrbs
                     {
-//                        print("neighbour checked: \(neighbour.checkedForCluster)")
+//
+                        //print("neighbour checked: \(neighbour.checkedForCluster)")
                         if !neighbour.checkedForCluster
                         {
 //                            print("Adding neighbour to process queue")
+                            print("haah")
                             orbsToProcess.append(neighbour)
+                            print(orbsToProcess.count)
                             neighbour.checkedForCluster = true
                         }
                     }
@@ -322,14 +329,14 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
             let pos = getGridPosition(xCenter, yCenter)
-            
-            
+            print("it begins")
+            print(pos)
             collidingOrb.removeFromParent()
-            orbMatrix[Int(pos.x)][Int(pos.y)] = collidingOrb
-            collidingOrb.position = getOrbCoordinate(Int(pos.x), Int(pos.y))
+            orbMatrix[Int(pos.y)][Int(pos.x)] = collidingOrb
+            collidingOrb.position = getOrbCoordinate(Int(pos.y), Int(pos.x))
             self.addChild(collidingOrb)
             
-            let cluster = findOrbCluster(Int(pos.x), Int(pos.y), matchColour: true, reset: true)
+            let cluster = findOrbCluster(Int(pos.y), Int(pos.x), matchColour: true, reset: true)
             
 //            print("Cluster size: \(cluster.count)")
             if cluster.count >= 3
@@ -340,7 +347,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 {
                     let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y, forInsertion: false)
                     orb.removeFromParent()
-                    orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
+                    orbMatrix[Int(orbPos.y)][Int(orbPos.x)] = nil
                 }
                 
 //                let floatingClusters = findFloatingClusters()
@@ -368,14 +375,12 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
             let pos = getGridPosition(xCenter, yCenter)
-            
-            
             collidingOrb.removeFromParent()
-            orbMatrix[Int(pos.x)][Int(pos.y)] = collidingOrb
-            collidingOrb.position = getOrbCoordinate(Int(pos.x), Int(pos.y))
+            orbMatrix[Int(pos.y)][Int(pos.x)] = collidingOrb
+            collidingOrb.position = getOrbCoordinate(Int(pos.y), Int(pos.x))
             self.addChild(collidingOrb)
             
-            let cluster = findOrbCluster(Int(pos.x), Int(pos.y), matchColour: true, reset: true)
+            let cluster = findOrbCluster(Int(pos.y), Int(pos.x), matchColour: true, reset: true)
             
 //            print("Cluster size: \(cluster.count)")
             if cluster.count >= 3
@@ -384,7 +389,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 {
                     let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y, forInsertion: false)
                     orb.removeFromParent()
-                    orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
+                    orbMatrix[Int(orbPos.y)][Int(orbPos.x)] = nil
                 }
                 
 //                let floatingClusters = findFloatingClusters()
