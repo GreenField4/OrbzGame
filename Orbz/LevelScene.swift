@@ -40,7 +40,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     }
     
     // Calculate row and column indices from screen position
-    private func getGridPosition(_ x: CGFloat, _ y: CGFloat, direction: CGPoint? = nil, forInsertion: Bool = true) -> CGPoint
+    private func getGridPosition(_ x: CGFloat, _ y: CGFloat) -> CGPoint
     {
         var gridY = floor(abs(y) / GameConstants.RowHeight)
         //print("grid system")
@@ -55,48 +55,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         var gridX = round((x + xOffset) / GameConstants.OrbWidth)
         //print(gridX)
         //print(gridY)
-        
-        // Only run this when we're trying to force a new Orb into the matrix instead of a simple lookup
-        if forInsertion && direction != nil && (orbMatrix[Int(gridY)][Int(gridX)] != nil){
-            if direction!.x < 0 && (Int(gridX - 1) >= 0 && Int(gridX - 1) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX - 1)] == nil
-            {
-                // Try to insert to the left of the colliding orb
-                gridX += -1
-            }
-            else if direction!.x > 0 && (Int(gridX + 1) >= 0 && Int(gridX + 1) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX + 1)] == nil
-            {
-                // Try to insert to the right of the colliding orb
-                gridX += 1
-            }
-            else if Int(gridY + 1) < orbMatrix.count && orbMatrix[Int(gridY + 1)][Int(gridX)] == nil
-            {
-                // Insert one down
-                gridY += 1
-            }
-            else
-            {
-                fatalError("ERROR: Could not find placement for orb")
-            }
-//            print("boss")
-//
-//            if Int(gridY + 1) < orbMatrix.count && orbMatrix[Int(gridY + 1)][Int(gridX)] == nil
-//            {
-//                gridY += 1
-//            }
-//            else if (gridX+1 >= 0)  && ((Int(gridX + 1)) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX + 1)] == nil
-//            {
-//                gridX += 1
-//            }
-//            else if (Int(gridX - 1) >= 0 && (Int(gridX - 1)) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX)] == nil
-//            {
-//                gridX += -1
-//            }
- 
-            
-            //print(gridX)
-            //print(gridY)
-            
-        }
         
         return CGPoint(x: gridX, y: gridY)
     }
@@ -314,7 +272,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         return allClusters
     }
     
-    private func onOrbCollision(_ collidingOrb: Orb, _ direction: CGPoint? = nil)
+    private func onOrbCollision(_ collidingOrb: Orb)
     {
         // Stop orb movement and change its collision category
         collidingOrb.setOrbStuck(true)
@@ -323,7 +281,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         let yCenter = self.frame.maxY - collidingOrb.position.y //+ GameConstants.OrbHeight / 70
         
         // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
-        let pos = getGridPosition(xCenter, yCenter, direction: direction)
+        let pos = getGridPosition(xCenter, yCenter)
         collidingOrb.x = Int(pos.x)
         collidingOrb.y = Int(pos.y)
         print("it begins")
@@ -380,8 +338,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         {
             print("Orbs colliding")
             let collidingOrb = bodyA.node as! Orb
-            let stuckOrb = bodyB.node as! Orb
-            onOrbCollision(collidingOrb, stuckOrb.position - collidingOrb.position)
+//            let stuckOrb = bodyB.node as! Orb
+            onOrbCollision(collidingOrb)
         }
         
         if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.Barrier != 0)
