@@ -3,17 +3,22 @@
     "bgTextureName":"level1",
     "bgMusicName":"test",
     "orbColorMatrix":[
-        ["red", "green", "", "blue"],
-        ["yellow", "purple", "orange"],
-        ["red", "red", "red"]
+        ["red", "red", "yellow", "yellow", "blue", "blue", "green", "green"],
+        ["red", "red", "yellow", "yellow", "blue", "blue", "green"],
+        ["blue", "blue", "green", "green", "red", "red", "yellow", "yellow"],
+        ["blue", "green", "green", "red", "red", "yellow", "yellow"]
     ]
  },
  {
     "bgTextureName":"level2",
     "bgMusicName":"test2.mp3",
     "orbColorMatrix":[
-        ["orange", "green", "blue"],
-        ["green", "purple", "pink"]
+        ["", "yellow", "yellow", "yellow", "red", "red", "red"],
+        ["yellow", "", "", "", "", "", "red"],
+        ["", "yellow", "", "", "", "", "red"],
+        ["yellow", "blue", "green", "purple", "blue", "green", "red"],
+        ["", "green", "purple", "blue", "green", "purple", "blue", ""],
+        ["", "blue", "green", "purple", "blue", "green", ""]
     ]
  }
 ]

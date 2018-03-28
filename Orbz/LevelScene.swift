@@ -29,7 +29,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     {
         var orbX = (CGFloat(col) * GameConstants.OrbWidth / 1.2) + (GameConstants.OrbWidth / 2)
         
-        if (row % 2 == 0)
+        if (row % 2 != 0)
         {
             orbX += GameConstants.OrbWidth / 2.35
         }
@@ -40,7 +40,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     }
     
     // Calculate row and column indices from screen position
-    private func getGridPosition(_ x: CGFloat, _ y: CGFloat, forInsertion: Bool = true) -> CGPoint
+    private func getGridPosition(_ x: CGFloat, _ y: CGFloat, direction: CGPoint? = nil, forInsertion: Bool = true) -> CGPoint
     {
         var gridY = floor(abs(y) / GameConstants.RowHeight)
         //print("grid system")
@@ -52,31 +52,45 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         }
         
         //print(xOffset)
-        var gridX = floor((x + xOffset) / GameConstants.OrbWidth)
+        var gridX = round((x + xOffset) / GameConstants.OrbWidth)
         //print(gridX)
         //print(gridY)
         
         // Only run this when we're trying to force a new Orb into the matrix instead of a simple lookup
-        if forInsertion && (orbMatrix[Int(gridX)][Int(gridY)] != nil){
-            //print("boss")
-            
-//            if Int(gridY + 1) < orbMatrix.count && orbMatrix[Int(gridX)][Int(gridY + 1)] == nil
-//            {
-//                gridY += 1
-//            }
-            
-            if (gridX+1 >= 0)  && ((Int(gridX + 1)) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX + 1)] == nil
+        if forInsertion && direction != nil && (orbMatrix[Int(gridY)][Int(gridX)] != nil){
+            if direction!.x < 0 && (Int(gridX - 1) >= 0 && Int(gridX - 1) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX - 1)] == nil
             {
+                // Try to insert to the left of the colliding orb
+                gridX += -1
+            }
+            else if direction!.x > 0 && (Int(gridX + 1) >= 0 && Int(gridX + 1) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX + 1)] == nil
+            {
+                // Try to insert to the right of the colliding orb
                 gridX += 1
             }
-            else if (Int(gridX - 1) >= 0 && (Int(gridX - 1)) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX)] == nil
+            else if Int(gridY + 1) < orbMatrix.count && orbMatrix[Int(gridY + 1)][Int(gridX)] == nil
             {
-                gridX += -1
+                // Insert one down
+                gridY += 1
             }
             else
             {
-                gridY += 1
+                fatalError("ERROR: Could not find placement for orb")
             }
+//            print("boss")
+//
+//            if Int(gridY + 1) < orbMatrix.count && orbMatrix[Int(gridY + 1)][Int(gridX)] == nil
+//            {
+//                gridY += 1
+//            }
+//            else if (gridX+1 >= 0)  && ((Int(gridX + 1)) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX + 1)] == nil
+//            {
+//                gridX += 1
+//            }
+//            else if (Int(gridX - 1) >= 0 && (Int(gridX - 1)) < orbMatrix[0].count) && orbMatrix[Int(gridY)][Int(gridX)] == nil
+//            {
+//                gridX += -1
+//            }
  
             
             //print(gridX)
@@ -100,15 +114,16 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                     colorsUsed.append(orbColorMatrix[row][col])
                     let currentOrb = Orb(color: orbColorMatrix[row][col], stuck: true)
                     currentOrb.position = getOrbCoordinate(row, col)
-                
+                    currentOrb.x = col
+                    currentOrb.y = row
                     orbMatrix[row][col] = currentOrb
                     self.addChild(currentOrb)
                 }
             }
         }
         
-        print("Orb [0][0] X: \(orbMatrix[0][0]!.position.x)")
-        print("Orb [0][1] X: \(orbMatrix[1][0]!.position.x)")
+//        print("Orb [0][0] X: \(orbMatrix[0][0]!.position.x)")
+//        print("Orb [0][1] X: \(orbMatrix[1][0]!.position.x)")
     }
     
     private func moveToNextLevel()
@@ -158,20 +173,19 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     private func getOrbNeighbours(_ orb: Orb, matchColour: Bool) -> Array<Orb>
     {
         var neighbourOrbs = Array<Orb>()
-        let posInMatrix = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y, forInsertion: false)
-        let orbX = Int(posInMatrix.x)
-        let orbY = Int(posInMatrix.y)
+        let orbX = orb.x!
+        let orbY = orb.y!
         
         let neighbourOffsets: [[Int]]
         
-        if orbX % 2 == 0
+        if orbY % 2 != 0
         {
-            // Checking for an even row orb
+            // Checking for an odd row orb
             neighbourOffsets = GameConstants.NeighbourOffsetTable[0]
         }
         else
         {
-            // Checking for an odd row orb
+            // Checking for an even row orb
             neighbourOffsets = GameConstants.NeighbourOffsetTable[1]
         }
         
@@ -184,7 +198,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
 //            let neighbourY = orbY + GameConstants.NeighbourOffsetTable[i][1]
             print(neighbourX)
             print(neighbourY)
-            if (neighbourX >= 0 && neighbourX < orbMatrix.count) && (neighbourY >= 0 && neighbourY < orbMatrix[0].count)
+            if (neighbourX >= 0 && neighbourX < orbMatrix[0].count) && (neighbourY >= 0 && neighbourY < orbMatrix.count)
             {
                 print(orbMatrix[neighbourY][neighbourX]?.colour)
                 if let neighbour = orbMatrix[neighbourY][neighbourX]
@@ -300,6 +314,52 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         return allClusters
     }
     
+    private func onOrbCollision(_ collidingOrb: Orb, _ direction: CGPoint? = nil)
+    {
+        // Stop orb movement and change its collision category
+        collidingOrb.setOrbStuck(true)
+        
+        let xCenter = collidingOrb.position.x //+ GameConstants.OrbWidth / 4
+        let yCenter = self.frame.maxY - collidingOrb.position.y //+ GameConstants.OrbHeight / 70
+        
+        // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
+        let pos = getGridPosition(xCenter, yCenter, direction: direction)
+        collidingOrb.x = Int(pos.x)
+        collidingOrb.y = Int(pos.y)
+        print("it begins")
+        print(pos)
+        collidingOrb.removeFromParent()
+        orbMatrix[collidingOrb.y!][collidingOrb.x!] = collidingOrb
+        collidingOrb.position = getOrbCoordinate(collidingOrb.y!, collidingOrb.x!)
+        self.addChild(collidingOrb)
+        
+        let cluster = findOrbCluster(collidingOrb.y!, collidingOrb.x!, matchColour: true, reset: true)
+        
+        //            print("Cluster size: \(cluster.count)")
+        if cluster.count >= 3
+        {
+            //                print("cluster detected")
+            
+            for orb in cluster
+            {
+                orbMatrix[orb.y!][orb.x!] = nil
+                orb.removeFromParent()
+            }
+            
+            //                let floatingClusters = findFloatingClusters()
+            //
+            //                for cluster in floatingClusters
+            //                {
+            //                    for orb in cluster
+            //                    {
+            //                        let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y)
+            //                        orb.removeFromParent()
+            //                        orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
+            //                    }
+            //                }
+        }
+    }
+    
     func didBegin(_ contact: SKPhysicsContact)
     {
         var bodyA: SKPhysicsBody
@@ -319,91 +379,15 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.StuckOrb != 0)
         {
             print("Orbs colliding")
-            
-            // Stop orb movement and change its collision category
             let collidingOrb = bodyA.node as! Orb
-            collidingOrb.setOrbStuck(true)
-
-            let xCenter = collidingOrb.position.x //+ GameConstants.OrbWidth / 4
-            let yCenter = self.frame.maxY - collidingOrb.position.y //+ GameConstants.OrbHeight / 70
-            
-            // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
-            let pos = getGridPosition(xCenter, yCenter)
-            print("it begins")
-            print(pos)
-            collidingOrb.removeFromParent()
-            orbMatrix[Int(pos.y)][Int(pos.x)] = collidingOrb
-            collidingOrb.position = getOrbCoordinate(Int(pos.y), Int(pos.x))
-            self.addChild(collidingOrb)
-            
-            let cluster = findOrbCluster(Int(pos.y), Int(pos.x), matchColour: true, reset: true)
-            
-//            print("Cluster size: \(cluster.count)")
-            if cluster.count >= 3
-            {
-//                print("cluster detected")
-                
-                for orb in cluster
-                {
-                    let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y, forInsertion: false)
-                    orb.removeFromParent()
-                    orbMatrix[Int(orbPos.y)][Int(orbPos.x)] = nil
-                }
-                
-//                let floatingClusters = findFloatingClusters()
-//                
-//                for cluster in floatingClusters
-//                {
-//                    for orb in cluster
-//                    {
-//                        let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y)
-//                        orb.removeFromParent()
-//                        orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
-//                    }
-//                }
-            }
+            let stuckOrb = bodyB.node as! Orb
+            onOrbCollision(collidingOrb, stuckOrb.position - collidingOrb.position)
         }
         
         if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.Barrier != 0)
         {
             print("ORB -> BARRIER")
-            let collidingOrb = bodyA.node as! Orb
-            collidingOrb.setOrbStuck(true)
-            
-            let xCenter = collidingOrb.position.x //+ GameConstants.OrbWidth / 4
-            let yCenter = self.frame.maxY - collidingOrb.position.y //+ GameConstants.OrbHeight / 70
-            
-            // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
-            let pos = getGridPosition(xCenter, yCenter)
-            collidingOrb.removeFromParent()
-            orbMatrix[Int(pos.y)][Int(pos.x)] = collidingOrb
-            collidingOrb.position = getOrbCoordinate(Int(pos.y), Int(pos.x))
-            self.addChild(collidingOrb)
-            
-            let cluster = findOrbCluster(Int(pos.y), Int(pos.x), matchColour: true, reset: true)
-            
-//            print("Cluster size: \(cluster.count)")
-            if cluster.count >= 3
-            {
-                for orb in cluster
-                {
-                    let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y, forInsertion: false)
-                    orb.removeFromParent()
-                    orbMatrix[Int(orbPos.y)][Int(orbPos.x)] = nil
-                }
-                
-//                let floatingClusters = findFloatingClusters()
-//
-//                for cluster in floatingClusters
-//                {
-//                    for orb in cluster
-//                    {
-//                        let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y)
-//                        orb.removeFromParent()
-//                        orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
-//                    }
-//                }
-            }
+            onOrbCollision(bodyA.node as! Orb)
         }
     }
     
@@ -487,6 +471,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
+//        moveToNextLevel()
         framesSinceLastTap = 0
         shouldCountFramesSinceLastTap = true
     }

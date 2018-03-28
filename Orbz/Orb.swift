@@ -13,6 +13,8 @@ class Orb: SKSpriteNode
 {
     let colour: String
     var checkedForCluster: Bool // Whether or not this orb has already been considered in cluster checks
+    var x: Int?
+    var y: Int?
     
     init(color: String, stuck: Bool = false, checked: Bool = false)
     {
