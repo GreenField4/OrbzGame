@@ -51,7 +51,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         var xOffset = CGFloat(0)
         if ((gridY).truncatingRemainder(dividingBy: 2) == 1)
         {
-            xOffset += (GameConstants.OrbWidth/1.2) / 2
+            xOffset += GameConstants.OrbWidth / 2
         }
         
         //print(xOffset)
@@ -84,7 +84,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         }
         //print(self.frame.maxY)
         print("Orb [0][0] X: \(orbMatrix[0][0]!.position.x)")
-        print("Orb [0][1] X: \(orbMatrix[0][1]!.position.x)")
+        print("Orb [0][1] X: \(orbMatrix[1][0]!.position.x)")
         print(GameConstants.OrbWidth)
     }
     
@@ -297,7 +297,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
         let cluster = findOrbCluster(collidingOrb.y!, collidingOrb.x!, matchColour: true, reset: true)
         
-        //            print("Cluster size: \(cluster.count)")
+        
         if cluster.count >= 3
         {
             //                print("cluster detected")
