@@ -44,8 +44,8 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
 
 func dropper(barrier : SKSpriteNode, orbMatrix : Array<Array<Orb?>>, dropRate : CGFloat) {
     let drop = SKAction.moveBy(x: 0, y:  0 - dropRate, duration: 0.1)
-    for i in (0...orbMatrix.count - 1){
-        for j in (0...orbMatrix[i].count - 1){
+    for i in (0...orbMatrix.count){
+        for j in (0...orbMatrix[i].count){
             if orbMatrix[i][j] != nil{
                 orbMatrix[i][j]?.run(drop)
             }
@@ -67,3 +67,15 @@ func loseCheck(orbMatrix : Array<Array<Orb?>>, loseLine : CGFloat) -> Bool{
     }
     return false
 }
+
+func winCheck(orbMatrix : Array<Array<Orb?>>) -> Bool{
+    for i in (0...orbMatrix.count - 1){
+        for j in (0...orbMatrix[i].count - 1){
+            if orbMatrix[i][j] != nil{
+                return false
+            }
+        }
+    }
+    return true
+}
+
