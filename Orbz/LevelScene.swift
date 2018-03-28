@@ -42,19 +42,22 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     // Calculate row and column indices from screen position
     private func getGridPosition(_ x: CGFloat, _ y: CGFloat) -> CGPoint
     {
-        var gridY = floor(abs(y) / GameConstants.RowHeight)
+        print(x)
+        print(y)
+        let remainder = x.truncatingRemainder(dividingBy: (GameConstants.OrbWidth/1.2))
+        print("Remainder: \(remainder)")
+        var gridY = floor((y + 8.6 ) / GameConstants.RowHeight)
         //print("grid system")
         var xOffset = CGFloat(0)
-        
         if ((gridY).truncatingRemainder(dividingBy: 2) == 1)
         {
-            xOffset += GameConstants.OrbWidth / 2
+            xOffset += (GameConstants.OrbWidth/1.2) / 2
         }
         
         //print(xOffset)
-        var gridX = round((x + xOffset) / GameConstants.OrbWidth)
-        //print(gridX)
-        //print(gridY)
+        var gridX = floor((x - xOffset) / (GameConstants.OrbWidth/1.2) )
+        print(gridX)
+        print(gridY)
         
         return CGPoint(x: gridX, y: gridY)
     }
@@ -79,9 +82,10 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 }
             }
         }
-        
-//        print("Orb [0][0] X: \(orbMatrix[0][0]!.position.x)")
-//        print("Orb [0][1] X: \(orbMatrix[1][0]!.position.x)")
+        //print(self.frame.maxY)
+        print("Orb [0][0] X: \(orbMatrix[0][0]!.position.x)")
+        print("Orb [0][1] X: \(orbMatrix[0][1]!.position.x)")
+        print(GameConstants.OrbWidth)
     }
     
     private func moveToNextLevel()
@@ -154,11 +158,11 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             let neighbourY = orbY + neighbourOffsets[i][1]
 //            let neighbourX = orbX + GameConstants.NeighbourOffsetTable[i][0]
 //            let neighbourY = orbY + GameConstants.NeighbourOffsetTable[i][1]
-            print(neighbourX)
-            print(neighbourY)
+            //print(neighbourX)
+            //print(neighbourY)
             if (neighbourX >= 0 && neighbourX < orbMatrix[0].count) && (neighbourY >= 0 && neighbourY < orbMatrix.count)
             {
-                print(orbMatrix[neighbourY][neighbourX]?.colour)
+                //print(orbMatrix[neighbourY][neighbourX]?.colour)
                 if let neighbour = orbMatrix[neighbourY][neighbourX]
                 {
                     if !matchColour || (neighbour.colour == orb.colour)
@@ -191,8 +195,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             while orbsToProcess.count > 0
             {
-                print("new loop")
-                print(orbsToProcess.count)
+                //print("new loop")
+                //print(orbsToProcess.count)
 //                print("Getting current orb to check")
                 let currentOrb = orbsToProcess.removeLast()
                 
@@ -209,7 +213,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                         if !neighbour.checkedForCluster
                         {
 //                            print("Adding neighbour to process queue")
-                            print("haah")
+                            //print("haah")
                             orbsToProcess.append(neighbour)
                             print(orbsToProcess.count)
                             neighbour.checkedForCluster = true
@@ -284,8 +288,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         let pos = getGridPosition(xCenter, yCenter)
         collidingOrb.x = Int(pos.x)
         collidingOrb.y = Int(pos.y)
-        print("it begins")
-        print(pos)
+        //print("it begins")
+        //print(pos)
         collidingOrb.removeFromParent()
         orbMatrix[collidingOrb.y!][collidingOrb.x!] = collidingOrb
         collidingOrb.position = getOrbCoordinate(collidingOrb.y!, collidingOrb.x!)

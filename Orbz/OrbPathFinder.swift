@@ -33,8 +33,8 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
         let initalMove = SKAction.moveBy(x: direction.dx, y: direction.dy, duration: TimeInterval(speed))
         direction = CGVector(dx: (direction.dx * 2),dy: direction.dy * 2)
         let revDirection = CGVector(dx: 0 - direction.dx,dy: direction.dy)
-        let normalDirection = SKAction.moveBy(x: direction.dx, y: direction.dy, duration: TimeInterval(speed * 2))
-        let revDirectionMove = SKAction.moveBy(x: revDirection.dx, y: revDirection.dy, duration: TimeInterval(speed * 2))
+        let normalDirection = SKAction.moveBy(x: direction.dx, y: direction.dy, duration: TimeInterval(speed * 3))
+        let revDirectionMove = SKAction.moveBy(x: revDirection.dx, y: revDirection.dy, duration: TimeInterval(speed * 3))
         let missAction = SKAction.run() {
             orb.run(SKAction.repeatForever(SKAction.sequence([revDirectionMove, normalDirection])))
         }

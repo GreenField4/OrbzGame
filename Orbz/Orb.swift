@@ -24,7 +24,7 @@ class Orb: SKSpriteNode
         super.init(texture: texture, color: SKColor.clear, size: CGSize(width: texture.size().width / 1.2, height: texture.size().height / 1.2))
         
         //self.physicsBody = SKPhysicsBody(texture: self.texture!,size:self.size)
-        self.physicsBody = SKPhysicsBody(circleOfRadius: GameConstants.OrbWidth / 2.25)
+        self.physicsBody = SKPhysicsBody(circleOfRadius: GameConstants.OrbWidth / 2.5)
         self.physicsBody?.isDynamic = true
         self.physicsBody?.usesPreciseCollisionDetection = true
         
