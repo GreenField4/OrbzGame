@@ -14,6 +14,7 @@ class TitleScene: SKScene {
     let btnToggleMute = SKLabelNode(fontNamed: "Courier")
     let btnPlay = SKLabelNode(fontNamed: "Courier")
     let btnControls = SKLabelNode(fontNamed: "Courier")
+    
     override func didMove(to view: SKView) {
         backgroundColor = SKColor.black
         //play button
@@ -41,6 +42,8 @@ class TitleScene: SKScene {
         btnToggleMute.name = "btnToggleMute"
         btnToggleMute.position =  CGPoint(x:self.frame.midX, y:self.frame.midY);
         self.addChild(btnToggleMute)
+        
+        AudioManager.playBGM(named: "titlescene")
     }
     
     
@@ -73,8 +76,8 @@ class TitleScene: SKScene {
                 let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
                 let gameScene = LevelScene(size: self.size);
                 self.view?.presentScene(gameScene, transition: transition)
-            }else{
-                print("outside area")
+            }else if theNode.name == btnToggleMute.name{
+                AudioManager.toggleMute()
             }
         }
     }

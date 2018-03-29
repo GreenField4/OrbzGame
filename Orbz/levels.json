@@ -1,7 +1,7 @@
 [
  {
     "bgTextureName":"level1",
-    "bgMusicName":"test",
+    "bgMusicName":"titlescene",
     "barrierDropRate":5,
     "orbColorMatrix":[
         ["red", "red", "yellow", "yellow", "blue", "blue", "green", "green"],
@@ -12,7 +12,7 @@
  },
  {
     "bgTextureName":"level2",
-    "bgMusicName":"test2.mp3",
+    "bgMusicName":"titlescene",
     "barrierDropRate":6,
     "orbColorMatrix":[
         ["", "yellow", "yellow", "yellow", "red", "red", "red"],

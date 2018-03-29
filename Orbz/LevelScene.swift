@@ -496,8 +496,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         nextOrbLabel.position = CGPoint(x: size.width / 8, y: size.height / 14)
         self.addChild(nextOrbLabel)
         
-        
-        
         lblScore.text = String(format: "Score: %04d", GameVariables.curScore)
         lblScore.fontName = "AvenirNext-Bold"
         lblScore.fontSize = 25
@@ -517,6 +515,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         self.addChild(btnPause)
         self.addChild(pauseMenu)
         pauseMenu.initPauseMenu()
+        
+        AudioManager.playBGM(named: level.bgMusicName)
         
         layoutOrbs()
         initPlayerOrbs()
@@ -625,11 +625,13 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 } else if node.name == btnPause.name {
                     pauseMenu.toggleGamePaused()
                     foundOtherEvent = true
+                    AudioManager.togglePauseBGM()
                 }
                 else if node.name == "btnResume"
                 {
                     foundOtherEvent = true
                     pauseMenu.toggleGamePaused()
+                    AudioManager.togglePauseBGM()
                 }
                 else if node.name == "btnQuit"
                 {
@@ -642,7 +644,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 else if node.name == "btnToggleMute"
                 {
                     foundOtherEvent = true
-                    print("I WILL TOGGLE YOUR MUTING LATER")
+                    AudioManager.toggleMute()
                 }
             }
             

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		458F09CB206D6A8200FD844A /* PauseMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F09CA206D6A8200FD844A /* PauseMenu.swift */; };
+		458F09CD206D7E7300FD844A /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F09CC206D7E7300FD844A /* AudioManager.swift */; };
+		458F09D0206D82AA00FD844A /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 458F09CF206D82AA00FD844A /* Sounds */; };
 		4592736B2065CC2A0032A4FB /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4592736A2065CC2A0032A4FB /* GameConstants.swift */; };
 		4592736D2065CF3A0032A4FB /* Orb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4592736C2065CF3A0032A4FB /* Orb.swift */; };
 		AB4B53F420645D8C00421D6E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4B53F320645D8C00421D6E /* AppDelegate.swift */; };
@@ -49,6 +51,8 @@
 
 /* Begin PBXFileReference section */
 		458F09CA206D6A8200FD844A /* PauseMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseMenu.swift; sourceTree = "<group>"; };
+		458F09CC206D7E7300FD844A /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		458F09CF206D82AA00FD844A /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Sounds; sourceTree = "<group>"; };
 		4592736A2065CC2A0032A4FB /* GameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
 		4592736C2065CF3A0032A4FB /* Orb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orb.swift; sourceTree = "<group>"; };
 		AB4B53F020645D8C00421D6E /* Orbz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Orbz.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,11 +129,13 @@
 		AB4B53F220645D8C00421D6E /* Orbz */ = {
 			isa = PBXGroup;
 			children = (
+				458F09CF206D82AA00FD844A /* Sounds */,
 				AB849C9420658D920006BDD7 /* levels.json */,
 				AB849C9220658D8B0006BDD7 /* LevelLoader.swift */,
 				4592736A2065CC2A0032A4FB /* GameConstants.swift */,
 				AB849C9020658D830006BDD7 /* Level.swift */,
 				AB4B53F320645D8C00421D6E /* AppDelegate.swift */,
+				458F09CC206D7E7300FD844A /* AudioManager.swift */,
 				AB4B53F520645D8C00421D6E /* GameScene.sks */,
 				AB4B53F720645D8C00421D6E /* Actions.sks */,
 				AB4B53F920645D8C00421D6E /* TitleScene.swift */,
@@ -280,6 +286,7 @@
 				AB4B540420645D8C00421D6E /* LaunchScreen.storyboard in Resources */,
 				AB849C9520658D920006BDD7 /* levels.json in Resources */,
 				AB4B53F820645D8C00421D6E /* Actions.sks in Resources */,
+				458F09D0206D82AA00FD844A /* Sounds in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +319,7 @@
 				AB4B53FC20645D8C00421D6E /* GameViewController.swift in Sources */,
 				4592736B2065CC2A0032A4FB /* GameConstants.swift in Sources */,
 				AB849C9B20659DAB0006BDD7 /* LevelScene.swift in Sources */,
+				458F09CD206D7E7300FD844A /* AudioManager.swift in Sources */,
 				AB849C9120658D830006BDD7 /* Level.swift in Sources */,
 				458F09CB206D6A8200FD844A /* PauseMenu.swift in Sources */,
 				AB849CA32065CC970006BDD7 /* OrbPathFinder.swift in Sources */,
