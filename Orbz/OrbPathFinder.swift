@@ -44,10 +44,10 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
 
 func dropper(barrier : SKSpriteNode, orbMatrix : Array<Array<Orb?>>, dropRate : CGFloat) {
     let drop = SKAction.moveBy(x: 0, y:  0 - dropRate, duration: 0.1)
-    for i in (0...orbMatrix.count){
-        for j in (0...orbMatrix[i].count){
-            if orbMatrix[i][j] != nil{
-                orbMatrix[i][j]?.run(drop)
+    for i in (0..<orbMatrix.count){
+        for j in (0..<orbMatrix[i].count){
+            if let temp = orbMatrix[i][j] {
+                temp.run(drop)
             }
             
         }
@@ -56,10 +56,10 @@ func dropper(barrier : SKSpriteNode, orbMatrix : Array<Array<Orb?>>, dropRate : 
 }
 
 func loseCheck(orbMatrix : Array<Array<Orb?>>, loseLine : CGFloat) -> Bool{
-    for i in (0...orbMatrix.count - 1){
-        for j in (0...orbMatrix[i].count - 1){
-            if orbMatrix[i][j] != nil{
-                if (orbMatrix[i][j]?.position.y)! <= loseLine {
+    for i in (0..<orbMatrix.count){
+        for j in (0..<orbMatrix[i].count){
+            if let temp = orbMatrix[i][j]{
+                if (temp.position.y) <= loseLine {
                     return true
                 }
             }
@@ -69,8 +69,8 @@ func loseCheck(orbMatrix : Array<Array<Orb?>>, loseLine : CGFloat) -> Bool{
 }
 
 func winCheck(orbMatrix : Array<Array<Orb?>>) -> Bool{
-    for i in (0...orbMatrix.count - 1){
-        for j in (0...orbMatrix[i].count - 1){
+    for i in (0..<orbMatrix.count){
+        for j in (0..<orbMatrix[i].count){
             if orbMatrix[i][j] != nil{
                 return false
             }

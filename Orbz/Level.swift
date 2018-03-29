@@ -12,5 +12,6 @@ class Level: Codable
 {
     public let bgTextureName: String
     public let bgMusicName: String
+    public let barrierDropRate: Int // i.e. Lower the barrier every five shots or so
     public let orbColorMatrix: Array<Array<String>>
 }

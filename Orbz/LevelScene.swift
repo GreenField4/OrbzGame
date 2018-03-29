@@ -22,10 +22,16 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     var shouldCountFramesSinceLastTap = false
     var reserveOrb: Orb?
     let frameTimerLimit = 5
+    
     var orbMatrix: [[Orb?]] = Array(repeating: Array(repeating: nil, count: 8), count: 15)
+    var totalDrop : CGFloat = 0
+    let loseLineLocation = CGFloat(175)
+    var dropSize: CGFloat = 0
+    var processingPreviousShot: Bool = false
+    var shotsTaken: Int = 0
     
     // Calculate screen position from row and column indices
-    private func getOrbCoordinate(_ row: Int, _ col: Int) -> CGPoint
+    private func getOrbCoordinate(_ row: Int, _ col: Int, drop: CGFloat) -> CGPoint
     {
         var orbX = (CGFloat(col) * GameConstants.OrbWidth / 1.2) + (GameConstants.OrbWidth / 2)
         
@@ -34,19 +40,15 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             orbX += GameConstants.OrbWidth / 2.35
         }
         
-        let orbY = size.height - (GameConstants.OrbHeight / 2) - CGFloat(row * Int(GameConstants.OrbHeight - 15))
+        let orbY = size.height - (GameConstants.OrbHeight / 2) - CGFloat(row * Int(GameConstants.OrbHeight - 15)) - drop
         
         return CGPoint(x: orbX, y: orbY)
     }
     
     // Calculate row and column indices from screen position
-    private func getGridPosition(_ x: CGFloat, _ y: CGFloat) -> CGPoint
+    private func getGridPosition(_ x: CGFloat, _ y: CGFloat, drop: CGFloat) -> CGPoint
     {
-        print(x)
-        print(y)
-        let remainder = x.truncatingRemainder(dividingBy: (GameConstants.OrbWidth/1.2))
-        print("Remainder: \(remainder)")
-        var gridY = floor((y + 8.6 ) / GameConstants.RowHeight)
+        let gridY = floor((y - drop + 8.6 ) / GameConstants.RowHeight)
         //print("grid system")
         var xOffset = CGFloat(0)
         if ((gridY).truncatingRemainder(dividingBy: 2) == 1)
@@ -55,10 +57,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         }
         
         //print(xOffset)
-        var gridX = floor((x - xOffset) / (GameConstants.OrbWidth/1.2) )
-        print(gridX)
-        print(gridY)
-        
+        let gridX = floor((x - xOffset) / (GameConstants.OrbWidth/1.2) )
         return CGPoint(x: gridX, y: gridY)
     }
     
@@ -72,9 +71,13 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             {
                 if orbColorMatrix[row][col] != ""
                 {
-                    colorsUsed.append(orbColorMatrix[row][col])
+                    if !colorsUsed.contains(orbColorMatrix[row][col])
+                    {
+                        colorsUsed.append(orbColorMatrix[row][col])
+                    }
+                    
                     let currentOrb = Orb(color: orbColorMatrix[row][col], stuck: true)
-                    currentOrb.position = getOrbCoordinate(row, col)
+                    currentOrb.position = getOrbCoordinate(row, col, drop: totalDrop)
                     currentOrb.x = col
                     currentOrb.y = row
                     orbMatrix[row][col] = currentOrb
@@ -83,9 +86,9 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             }
         }
         //print(self.frame.maxY)
-        print("Orb [0][0] X: \(orbMatrix[0][0]!.position.x)")
-        print("Orb [0][1] X: \(orbMatrix[1][0]!.position.x)")
-        print(GameConstants.OrbWidth)
+        //print("Orb [0][0] X: \(orbMatrix[0][0]!.position.x)")
+        //print("Orb [0][1] X: \(orbMatrix[1][0]!.position.x)")
+        //print(GameConstants.OrbWidth)
     }
     
     private func moveToNextLevel()
@@ -105,11 +108,18 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     private func getNextPlayerOrb()
     {
-        let nextOrb = Orb(color: colorsUsed[Int(arc4random_uniform(UInt32(colorsUsed.count)))])
-        orbQueue.append(nextOrb)
-        orbQueue.last?.position = CGPoint(x:self.frame.midX/4, y: GameConstants.OrbHeight/2)
-        orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
-        self.addChild(nextOrb)
+        if colorsUsed.count > 0
+        {
+            let nextOrb = Orb(color: colorsUsed[Int(arc4random_uniform(UInt32(colorsUsed.count)))])
+            orbQueue.append(nextOrb)
+            let nextMove = SKAction.move(to: CGPoint(x:self.frame.midX/4, y: GameConstants.OrbHeight/2), duration: 0.5)
+            orbQueue.last?.position = CGPoint(x:0 - self.frame.midX/4, y: GameConstants.OrbHeight/2)
+            
+            let loadingMove = SKAction.move(to: CGPoint(x:self.frame.midX, y:self.frame.minY), duration: 0.5)
+            self.addChild(nextOrb)
+            orbQueue[0].run(loadingMove)
+            nextOrb.run(nextMove)
+        }
     }
     
     private func initPlayerOrbs()
@@ -215,7 +225,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
 //                            print("Adding neighbour to process queue")
                             //print("haah")
                             orbsToProcess.append(neighbour)
-                            print(orbsToProcess.count)
+                            //print(orbsToProcess.count)
                             neighbour.checkedForCluster = true
                         }
                     }
@@ -276,6 +286,51 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         return allClusters
     }
     
+    private func stopSpawningOrbs(ofColour: String)
+    {
+        colorsUsed.remove(at: colorsUsed.index(of: ofColour)!)
+        
+        if reserveOrb != nil
+        {
+            if reserveOrb!.colour == ofColour
+            {
+                reserveOrb!.removeFromParent()
+                reserveOrb = nil
+            }
+        }
+        
+        if orbQueue.last?.colour == ofColour
+        {
+            orbQueue.removeLast().removeFromParent()
+            getNextPlayerOrb()
+        }
+        
+        if orbQueue.first?.colour == ofColour
+        {
+            orbQueue.removeFirst().removeFromParent()
+            getNextPlayerOrb()
+        }
+    }
+    
+    private func isColourEliminated(_ colour: String) -> Bool
+    {
+        for row in orbMatrix
+        {
+            for orb in row
+            {
+                if let temp = orb
+                {
+                    if temp.colour == colour
+                    {
+                        return false
+                    }
+                }
+            }
+        }
+        
+        return true
+    }
+    
     private func onOrbCollision(_ collidingOrb: Orb)
     {
         // Stop orb movement and change its collision category
@@ -285,18 +340,20 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         let yCenter = self.frame.maxY - collidingOrb.position.y //+ GameConstants.OrbHeight / 70
         
         // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
-        let pos = getGridPosition(xCenter, yCenter)
+        let pos = getGridPosition(xCenter, yCenter, drop: totalDrop)
         collidingOrb.x = Int(pos.x)
         collidingOrb.y = Int(pos.y)
         //print("it begins")
         //print(pos)
         collidingOrb.removeFromParent()
         orbMatrix[collidingOrb.y!][collidingOrb.x!] = collidingOrb
-        collidingOrb.position = getOrbCoordinate(collidingOrb.y!, collidingOrb.x!)
+        collidingOrb.position = getOrbCoordinate(collidingOrb.y!, collidingOrb.x!, drop: totalDrop)
         self.addChild(collidingOrb)
         
         let cluster = findOrbCluster(collidingOrb.y!, collidingOrb.x!, matchColour: true, reset: true)
         
+        var coloursToCheck = Set<String>()
+        coloursToCheck.insert(collidingOrb.colour)
         
         if cluster.count >= 3
         {
@@ -308,17 +365,41 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 orb.removeFromParent()
             }
             
-            //                let floatingClusters = findFloatingClusters()
-            //
-            //                for cluster in floatingClusters
-            //                {
-            //                    for orb in cluster
-            //                    {
-            //                        let orbPos = getGridPosition(orb.position.x, self.frame.maxY - orb.position.y)
-            //                        orb.removeFromParent()
-            //                        orbMatrix[Int(orbPos.x)][Int(orbPos.y)] = nil
-            //                    }
-            //                }
+            let floatingClusters = findFloatingClusters()
+            
+            for cluster in floatingClusters
+            {
+                for orb in cluster
+                {
+                    coloursToCheck.insert(orb.colour)
+                    orbMatrix[orb.y!][orb.x!] = nil
+                    orb.removeFromParent()
+                }
+            }
+            
+            if winCheck(orbMatrix: orbMatrix)
+            {
+                print("You win!")
+                moveToNextLevel()
+            }
+            else
+            {
+                for colour in coloursToCheck
+                {
+                    if isColourEliminated(colour)
+                    {
+                        stopSpawningOrbs(ofColour: colour)
+                    }
+                }
+            }
+        }
+        
+        processingPreviousShot = false
+        shotsTaken += 1
+        
+        if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
+        {
+            print("Game over!")
         }
     }
     
@@ -355,6 +436,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func didMove(to view: SKView)
     {
+        dropSize = (self.frame.maxY - loseLineLocation) / 5
         backgroundColor = SKColor.black
         
         let bgNode = SKSpriteNode(imageNamed: level.bgTextureName)
@@ -495,25 +577,29 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                         print("Sending orb to empty reserve box")
                         reserveOrb = orbQueue.removeFirst()
                         getNextPlayerOrb()
+                        let reserveMove = SKAction.move(to: CGPoint(x: size.width - size.width/10, y: size.height/18), duration: 0.5)
+                        reserveOrb!.run(reserveMove)
                     }
                     else
                     {
                         print("Swapping with reserve box")
                         let temp = orbQueue[0]
                         orbQueue[0] = reserveOrb!
-                        orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
+                        let backMove = SKAction.move(to: CGPoint(x: self.frame.midX, y:self.frame.minY), duration: 0.5)
+                        orbQueue[0].run(backMove)
                         reserveOrb = temp
+                        let reserveMove = SKAction.move(to: CGPoint(x: size.width - size.width/10, y: size.height/18), duration: 0.5)
+                        reserveOrb!.run(reserveMove)
                     }
-                    
-                    reserveOrb!.position = CGPoint(x: size.width - size.width/10, y: size.height/18)
                     foundOtherEvent = true
                 }
             }
             
-            if !foundOtherEvent
+            if !foundOtherEvent && !processingPreviousShot
             {
+                processingPreviousShot = true
                 fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
-                print(imgArrow.position)
+                //print(imgArrow.position)
                 getNextPlayerOrb()
             }
         }
@@ -528,6 +614,18 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         if shouldCountFramesSinceLastTap
         {
             framesSinceLastTap += 1
+        }
+        
+        if shotsTaken >= self.level.barrierDropRate
+        {
+            shotsTaken = 0
+            dropper(barrier: imgBarrier, orbMatrix: orbMatrix, dropRate: dropSize)
+            totalDrop += dropSize
+            
+            if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
+            {
+                print("Game Over!")
+            }
         }
     }
 }
