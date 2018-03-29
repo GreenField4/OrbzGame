@@ -17,10 +17,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let btnPause = SKSpriteNode(imageNamed: "Pause")
     let lblScore = SKLabelNode()
     private let arrowAnchor = SKNode()
-    let pauseMenu = SKNode()
-    let btnToggleMute = SKLabelNode(fontNamed: "Courier")
-    let btnResume = SKLabelNode(fontNamed: "Courier")
-    let btnQuit = SKLabelNode(fontNamed: "Courier")
+    let pauseMenu = PauseMenu()
     var colorsUsed = Array<String>()
     var orbQueue = Array<Orb>()
     let level = LevelLoader.getNextLevel()
@@ -34,7 +31,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     var dropSize: CGFloat = 0
     var processingPreviousShot: Bool = false
     var shotsTaken: Int = 0
-    var isGamePaused: Bool = false
     
     // Calculate screen position from row and column indices
     private func getOrbCoordinate(_ row: Int, _ col: Int, drop: CGFloat) -> CGPoint
@@ -519,40 +515,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         imgPauseBack.position = CGPoint(x: self.frame.maxX - 20 , y: self.frame.minY + btnReserve.size.height + (btnPause.size.height / 2) )
         //self.addChild(imgPauseBack)
         self.addChild(btnPause)
-        
-        pauseMenu.position = CGPoint(x:0, y:0);
-        pauseMenu.zPosition = 1
-        let menuBack = SKSpriteNode()
-        menuBack.size = CGSize(width: self.frame.midX, height: 300 )
-        menuBack.color = SKColor.black
-        menuBack.position = CGPoint(x:self.frame.midX, y:self.frame.midY)
-        pauseMenu.addChild(menuBack)
-        
-        //play button
-        print("resume button created")
-        btnResume.fontColor = SKColor.white
-        btnResume.fontSize = 30
-        btnResume.text = "Resume"
-        btnResume.name = "btnResume"
-        btnResume.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+100);
-        pauseMenu.addChild(btnResume)
-        
-        //instruction button
-        print("quit button created")
-        btnQuit.fontColor = SKColor.white
-        btnQuit.fontSize = 30
-        btnQuit.text = "Quit"
-        btnQuit.name = "btnQuit"
-        btnQuit.position =  CGPoint(x:self.frame.midX, y:self.frame.midY);
-        pauseMenu.addChild(btnQuit)
-        
-        print("Play Music button created")
-        btnToggleMute.fontColor = SKColor.white
-        btnToggleMute.fontSize = 30
-        btnToggleMute.text = "Toggle Mute"
-        btnToggleMute.name = "btnToggleMute"
-        btnToggleMute.position =  CGPoint(x:self.frame.midX, y:self.frame.midY-100);
-        pauseMenu.addChild(btnToggleMute)
+        self.addChild(pauseMenu)
+        pauseMenu.initPauseMenu()
         
         layoutOrbs()
         initPlayerOrbs()
@@ -576,8 +540,11 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
 //        moveToNextLevel()
-        framesSinceLastTap = 0
-        shouldCountFramesSinceLastTap = true
+        if !pauseMenu.isGamePaused
+        {
+            framesSinceLastTap = 0
+            shouldCountFramesSinceLastTap = true
+        }
     }
     
     private func clamp(_ value: CGFloat) -> CGFloat
@@ -594,23 +561,26 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?)
     {
-        for touch in touches
+        if !pauseMenu.isGamePaused
         {
-            let pointOfTouch = touch.location(in: self)
-            let previousPointOfTouch = touch.previousLocation(in: self)
-            let dragDirection = clamp(pointOfTouch.x - previousPointOfTouch.x)
-            let rotationAngle = -(dragDirection * .pi/90)
-            
-            if (arrowAnchor.zRotation + rotationAngle > (52 * .pi/180) )
+            for touch in touches
             {
-                arrowAnchor.zRotation = (52 * .pi/180)
+                let pointOfTouch = touch.location(in: self)
+                let previousPointOfTouch = touch.previousLocation(in: self)
+                let dragDirection = clamp(pointOfTouch.x - previousPointOfTouch.x)
+                let rotationAngle = -(dragDirection * .pi/90)
                 
-            }else if (arrowAnchor.zRotation + rotationAngle < (-52 * .pi/180)){
-                arrowAnchor.zRotation = (-52 * .pi/180)
-                
-            }else{
-                arrowAnchor.zRotation += rotationAngle
-                
+                if (arrowAnchor.zRotation + rotationAngle > (52 * .pi/180) )
+                {
+                    arrowAnchor.zRotation = (52 * .pi/180)
+                    
+                }else if (arrowAnchor.zRotation + rotationAngle < (-52 * .pi/180)){
+                    arrowAnchor.zRotation = (-52 * .pi/180)
+                    
+                }else{
+                    arrowAnchor.zRotation += rotationAngle
+                    
+                }
             }
         }
     }
@@ -628,7 +598,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             for node in nodes
             {
-                if node.name == btnReserve.name
+                if node.name == btnReserve.name && !pauseMenu.isGamePaused
                 {
                     print("Reserve box tapped")
                     
@@ -653,12 +623,30 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                     }
                     foundOtherEvent = true
                 } else if node.name == btnPause.name {
-                    //pause stuff
+                    pauseMenu.toggleGamePaused()
                     foundOtherEvent = true
+                }
+                else if node.name == "btnResume"
+                {
+                    foundOtherEvent = true
+                    pauseMenu.toggleGamePaused()
+                }
+                else if node.name == "btnQuit"
+                {
+                    foundOtherEvent = true
+                    GameVariables.curScore = 0
+                    let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
+                    let gameScene = TitleScene(size: self.size);
+                    self.view?.presentScene(gameScene, transition: transition)
+                }
+                else if node.name == "btnToggleMute"
+                {
+                    foundOtherEvent = true
+                    print("I WILL TOGGLE YOUR MUTING LATER")
                 }
             }
             
-            if !foundOtherEvent && !processingPreviousShot
+            if !pauseMenu.isGamePaused && !foundOtherEvent && !processingPreviousShot
             {
                 processingPreviousShot = true
                 fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)

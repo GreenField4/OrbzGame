@@ -12,5 +12,5 @@ struct GameVariables {
     
     static var toggleMute = true
     static var curScore = 0
-
+    static var highScore = 0
 }

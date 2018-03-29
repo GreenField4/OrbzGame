@@ -11,13 +11,56 @@ import SpriteKit
 
 class PauseMenu: SKNode
 {
-//    let resumeButton:
+    private let btnToggleMute = SKLabelNode(fontNamed: "Courier")
+    private let btnResume = SKLabelNode(fontNamed: "Courier")
+    private let btnQuit = SKLabelNode(fontNamed: "Courier")
+    
+    public var isGamePaused: Bool
     
     public override init()
     {
+        isGamePaused = false
         super.init()
+    }
+    
+    public func initPauseMenu()
+    {
+        self.position = CGPoint(x:0, y:0)
+        self.zPosition = 1
         
-        self.isHidden = false
+        let menuBack = SKSpriteNode()
+        menuBack.size = CGSize(width: self.scene!.frame.midX, height: 300 )
+        menuBack.color = SKColor.black
+        menuBack.position = CGPoint(x:self.scene!.frame.midX, y:self.scene!.frame.midY)
+        self.addChild(menuBack)
+        
+        //play button
+        print("resume button created")
+        btnResume.fontColor = SKColor.white
+        btnResume.fontSize = 30
+        btnResume.text = "Resume"
+        btnResume.name = "btnResume"
+        btnResume.position =  CGPoint(x:self.scene!.frame.midX, y:self.scene!.frame.midY+100);
+        self.addChild(btnResume)
+        
+        //instruction button
+        print("quit button created")
+        btnQuit.fontColor = SKColor.white
+        btnQuit.fontSize = 30
+        btnQuit.text = "Quit"
+        btnQuit.name = "btnQuit"
+        btnQuit.position =  CGPoint(x:self.scene!.frame.midX, y:self.scene!.frame.midY);
+        self.addChild(btnQuit)
+        
+        print("Play Music button created")
+        btnToggleMute.fontColor = SKColor.white
+        btnToggleMute.fontSize = 30
+        btnToggleMute.text = "Toggle Mute"
+        btnToggleMute.name = "btnToggleMute"
+        btnToggleMute.position =  CGPoint(x:self.scene!.frame.midX, y:self.scene!.frame.midY-100);
+        self.addChild(btnToggleMute)
+        
+        self.isHidden = true
         
         for node in self.children
         {
@@ -51,5 +94,7 @@ class PauseMenu: SKNode
                 node.isPaused = !node.isPaused
             }
         }
+        
+        self.isGamePaused = !self.isGamePaused
     }
 }
