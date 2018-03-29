@@ -14,7 +14,13 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let imgArrow = SKSpriteNode(imageNamed: "ornamented_arrow_0")
     let btnReserve = SKSpriteNode()
     let imgBarrier = SKSpriteNode()
+    let btnPause = SKSpriteNode(imageNamed: "Pause")
+    let lblScore = SKLabelNode()
     private let arrowAnchor = SKNode()
+    let pauseMenu = SKNode()
+    let btnToggleMute = SKLabelNode(fontNamed: "Courier")
+    let btnResume = SKLabelNode(fontNamed: "Courier")
+    let btnQuit = SKLabelNode(fontNamed: "Courier")
     var colorsUsed = Array<String>()
     var orbQueue = Array<Orb>()
     let level = LevelLoader.getNextLevel()
@@ -22,13 +28,13 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     var shouldCountFramesSinceLastTap = false
     var reserveOrb: Orb?
     let frameTimerLimit = 5
-    
     var orbMatrix: [[Orb?]] = Array(repeating: Array(repeating: nil, count: 8), count: 15)
-    var totalDrop : CGFloat = 0
+    var totalDrop : CGFloat = 41
     let loseLineLocation = CGFloat(175)
     var dropSize: CGFloat = 0
     var processingPreviousShot: Bool = false
     var shotsTaken: Int = 0
+    var isGamePaused: Bool = false
     
     // Calculate screen position from row and column indices
     private func getOrbCoordinate(_ row: Int, _ col: Int, drop: CGFloat) -> CGPoint
@@ -393,7 +399,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 }
             }
         }
-        
+        lblScore.text = String(format: "Score: %04d", GameVariables.curScore)
         processingPreviousShot = false
         shotsTaken += 1
         
@@ -436,7 +442,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func didMove(to view: SKView)
     {
-        dropSize = (self.frame.maxY - loseLineLocation) / 5
+        dropSize = (self.frame.maxY - 41 - loseLineLocation) / 5
         backgroundColor = SKColor.black
         
         let bgNode = SKSpriteNode(imageNamed: level.bgTextureName)
@@ -466,7 +472,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
 
         imgBarrier.name = "imgBarrier"
         imgBarrier.color = SKColor.darkGray
-        imgBarrier.position = CGPoint(x:self.frame.midX, y:self.frame.midY + self.frame.maxY-1)
+        imgBarrier.position = CGPoint(x:self.frame.midX, y:self.frame.midY + self.frame.maxY-41)
         imgBarrier.physicsBody = SKPhysicsBody(rectangleOf: imgBarrier.size) // define boundary of body
         imgBarrier.physicsBody?.isDynamic = true // 2
         imgBarrier.physicsBody?.categoryBitMask = GameConstants.CollisionCategories.Barrier //
@@ -475,7 +481,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         self.addChild(imgBarrier)
         
         //Barrier one image created
-        print("Barrier image created")
+        print("reserve image created")
         btnReserve.size = CGSize(width: 80, height: 80 )
         btnReserve.name = "btnReserve"
         btnReserve.color = SKColor.white
@@ -493,6 +499,60 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         nextOrbLabel.fontColor = SKColor.white
         nextOrbLabel.position = CGPoint(x: size.width / 8, y: size.height / 14)
         self.addChild(nextOrbLabel)
+        
+        
+        
+        lblScore.text = String(format: "Score: %04d", GameVariables.curScore)
+        lblScore.fontName = "AvenirNext-Bold"
+        lblScore.fontSize = 25
+        lblScore.fontColor = SKColor.white
+        lblScore.position = CGPoint(x: self.frame.minX + 75, y: self.frame.maxY - 25)
+        self.addChild(lblScore)
+        
+        btnPause.size = CGSize(width: 40, height: 40 )
+        btnPause.position = CGPoint(x: self.frame.maxX - 20 , y: self.frame.maxY - (btnPause.size.height / 2) )
+        btnPause.name = "btnPause"
+        btnPause.color = SKColor.white
+        let imgPauseBack = SKSpriteNode()
+        imgPauseBack.color = SKColor.white
+        imgPauseBack.size = CGSize(width: 40, height: 40 )
+        imgPauseBack.position = CGPoint(x: self.frame.maxX - 20 , y: self.frame.minY + btnReserve.size.height + (btnPause.size.height / 2) )
+        //self.addChild(imgPauseBack)
+        self.addChild(btnPause)
+        
+        pauseMenu.position = CGPoint(x:0, y:0);
+        pauseMenu.zPosition = 1
+        let menuBack = SKSpriteNode()
+        menuBack.size = CGSize(width: self.frame.midX, height: 300 )
+        menuBack.color = SKColor.black
+        menuBack.position = CGPoint(x:self.frame.midX, y:self.frame.midY)
+        pauseMenu.addChild(menuBack)
+        
+        //play button
+        print("resume button created")
+        btnResume.fontColor = SKColor.white
+        btnResume.fontSize = 30
+        btnResume.text = "Resume"
+        btnResume.name = "btnResume"
+        btnResume.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+100);
+        pauseMenu.addChild(btnResume)
+        
+        //instruction button
+        print("quit button created")
+        btnQuit.fontColor = SKColor.white
+        btnQuit.fontSize = 30
+        btnQuit.text = "Quit"
+        btnQuit.name = "btnQuit"
+        btnQuit.position =  CGPoint(x:self.frame.midX, y:self.frame.midY);
+        pauseMenu.addChild(btnQuit)
+        
+        print("Play Music button created")
+        btnToggleMute.fontColor = SKColor.white
+        btnToggleMute.fontSize = 30
+        btnToggleMute.text = "Toggle Mute"
+        btnToggleMute.name = "btnToggleMute"
+        btnToggleMute.position =  CGPoint(x:self.frame.midX, y:self.frame.midY-100);
+        pauseMenu.addChild(btnToggleMute)
         
         layoutOrbs()
         initPlayerOrbs()
@@ -568,7 +628,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             for node in nodes
             {
-                if node.name == "btnReserve"
+                if node.name == btnReserve.name
                 {
                     print("Reserve box tapped")
                     
@@ -591,6 +651,9 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                         let reserveMove = SKAction.move(to: CGPoint(x: size.width - size.width/10, y: size.height/18), duration: 0.5)
                         reserveOrb!.run(reserveMove)
                     }
+                    foundOtherEvent = true
+                } else if node.name == btnPause.name {
+                    //pause stuff
                     foundOtherEvent = true
                 }
             }
@@ -627,5 +690,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 print("Game Over!")
             }
         }
+        
     }
 }

@@ -8,7 +8,9 @@
 //random Comment
 import Foundation
 struct GameVariables {
-    var toggleMute = true
-    var curScore = 0
+    private init() {}
     
+    static var toggleMute = true
+    static var curScore = 0
+
 }
