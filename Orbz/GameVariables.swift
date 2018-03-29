@@ -10,7 +10,7 @@ import Foundation
 struct GameVariables {
     private init() {}
     
-    static var toggleMute = true
+    static var toggleMute = false
     static var curScore = 0
     static var highScore = 0
 }
