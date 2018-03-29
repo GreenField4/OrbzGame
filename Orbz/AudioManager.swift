@@ -8,6 +8,7 @@
 
 import Foundation
 import AVFoundation
+import SpriteKit
 
 class AudioManager
 {
@@ -101,8 +102,8 @@ class AudioManager
         }
     }
     
-    public static func playSFX(named: String)
+    public static func playSFX(named: String) -> SKAction
     {
-        //let path = Bundle.main.path(forResource: "Sounds/\(named)", ofType: "mp3")
+        return SKAction.playSoundFileNamed("Sounds/\(named).mp3", waitForCompletion: false)
     }
 }

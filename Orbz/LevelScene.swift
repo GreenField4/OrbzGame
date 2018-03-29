@@ -650,6 +650,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             if !pauseMenu.isGamePaused && !foundOtherEvent && !processingPreviousShot
             {
+                run(AudioManager.playSFX(named: "shot"))
                 processingPreviousShot = true
                 fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
                 //print(imgArrow.position)
