@@ -59,12 +59,16 @@ class LevelEndScoreDisplay: SKNode
         
         if gameOver
         {
+            curScoreLbl.text = "Score: \(GameVariables.curScore)"
+            highScoreLbl.text = "Best: \(GameVariables.highScore)"
             winLoseMessageLbl.text = "GAME OVER"
             winLoseMessageLbl.color = SKColor.red
             sfxName = "Defeat"
         }
         else
         {
+            curScoreLbl.text = "Score: \(GameVariables.curScore)"
+            highScoreLbl.text = "Best: \(GameVariables.highScore)"
             winLoseMessageLbl.text = "LEVEL CLEAR"
             winLoseMessageLbl.color = SKColor.yellow
             sfxName = "Victory"
@@ -73,11 +77,24 @@ class LevelEndScoreDisplay: SKNode
         self.isHidden = false
         AudioManager.stopBGM()
         
-        let playWinLoseSFX = AudioManager.playSFX(named: sfxName, waitForCompletion: true)
+        if !GameVariables.toggleMute
+        {
+            AudioManager.playBGM(named: sfxName)
+        }
+        
         let loadNextLevel = SKAction.run {
-            LevelLoader.moveToNextLevel(scene: self.scene!)
+            if !gameOver
+            {
+                LevelLoader.moveToNextLevel(scene: self.scene!)
+            }
+            else
+            {
+                let levelTransition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
+                let nextLevelScene = TitleScene(size: self.scene!.size)
+                self.scene!.view?.presentScene(nextLevelScene, transition: levelTransition)
+            }
         }
 
-        self.run(SKAction.sequence([playWinLoseSFX, loadNextLevel]))
+        self.run(SKAction.sequence([SKAction.wait(forDuration: 5), loadNextLevel]))
     }
 }

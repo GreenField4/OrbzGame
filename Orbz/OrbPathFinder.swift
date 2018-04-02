@@ -36,14 +36,24 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
         let normalDirection = SKAction.moveBy(x: direction.dx, y: direction.dy, duration: TimeInterval(speed * 3))
         let revDirectionMove = SKAction.moveBy(x: revDirection.dx, y: revDirection.dy, duration: TimeInterval(speed * 3))
         let missAction = SKAction.run() {
-            orb.run(SKAction.repeatForever(SKAction.sequence([AudioManager.playSFX(named: "Orb Bounce") ,revDirectionMove, normalDirection])))
+            if let audio = AudioManager.playSFX(named: "Orb Bounce")
+            {
+                orb.run(SKAction.repeatForever(SKAction.sequence([audio, revDirectionMove, normalDirection])))
+            }
+            else
+            {
+                orb.run(SKAction.repeatForever(SKAction.sequence([revDirectionMove, normalDirection])))
+            }
         }
         orb.run(SKAction.sequence([initalMove, missAction]))
     }
 }
 
 func dropper(barrier : SKSpriteNode, orbMatrix : Array<Array<Orb?>>, dropRate : CGFloat) {
-    barrier.run(AudioManager.playSFX(named: "Barrier Drop"))
+    if let audio = AudioManager.playSFX(named: "Barrier Drop")
+    {
+        barrier.run(audio)
+    }
     
     let drop = SKAction.moveBy(x: 0, y:  0 - dropRate, duration: 0.1)
     for i in (0..<orbMatrix.count){

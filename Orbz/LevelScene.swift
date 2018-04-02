@@ -33,6 +33,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     var processingPreviousShot: Bool = false
     var shotsTaken: Int = 0
     var comboMultiplier = 1
+    var gameOver = false
     
     // Calculate screen position from row and column indices
     private func getOrbCoordinate(_ row: Int, _ col: Int, drop: CGFloat) -> CGPoint
@@ -342,100 +343,109 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     private func onOrbCollision(_ collidingOrb: Orb)
     {
-        // Stop orb movement and change its collision category
-        collidingOrb.setOrbStuck(true)
-        
-        let xCenter = collidingOrb.position.x //+ GameConstants.OrbWidth / 4
-        let yCenter = self.frame.maxY - collidingOrb.position.y //+ GameConstants.OrbHeight / 70
-        
-        // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
-        let pos = getGridPosition(xCenter, yCenter, drop: totalDrop)
-        collidingOrb.x = Int(pos.x)
-        collidingOrb.y = Int(pos.y)
-        //print("it begins")
-        //print(pos)
-        collidingOrb.removeFromParent()
-        orbMatrix[collidingOrb.y!][collidingOrb.x!] = collidingOrb
-        collidingOrb.position = getOrbCoordinate(collidingOrb.y!, collidingOrb.x!, drop: totalDrop)
-        self.addChild(collidingOrb)
-        
-        let cluster = findOrbCluster(collidingOrb.y!, collidingOrb.x!, matchColour: true, reset: true)
-        
-        var coloursToCheck = Set<String>()
-        coloursToCheck.insert(collidingOrb.colour)
-        
-        if cluster.count >= 3
+        if !gameOver
         {
-            var orbsDestroyed = cluster.count
+            // Stop orb movement and change its collision category
+            collidingOrb.setOrbStuck(true)
             
-            run(AudioManager.playSFX(named: "Cluster Clear"))
-            // Reset shotsTaken to reward player for combos. i.e. three shots WITHOUT a combo will cause the drop
-            shotsTaken = 0
+            let xCenter = collidingOrb.position.x //+ GameConstants.OrbWidth / 4
+            let yCenter = self.frame.maxY - collidingOrb.position.y //+ GameConstants.OrbHeight / 70
             
-            for orb in cluster
+            // Determine how exactly bodyA hit bodyB (from the bottom? from the side?)
+            let pos = getGridPosition(xCenter, yCenter, drop: totalDrop)
+            collidingOrb.x = Int(pos.x)
+            collidingOrb.y = Int(pos.y)
+            //print("it begins")
+            //print(pos)
+            collidingOrb.removeFromParent()
+            orbMatrix[collidingOrb.y!][collidingOrb.x!] = collidingOrb
+            collidingOrb.position = getOrbCoordinate(collidingOrb.y!, collidingOrb.x!, drop: totalDrop)
+            self.addChild(collidingOrb)
+            
+            let cluster = findOrbCluster(collidingOrb.y!, collidingOrb.x!, matchColour: true, reset: true)
+            
+            var coloursToCheck = Set<String>()
+            coloursToCheck.insert(collidingOrb.colour)
+            
+            if cluster.count >= 3
             {
-                orbMatrix[orb.y!][orb.x!] = nil
-                orb.removeFromParent()
-            }
-            
-            let floatingClusters = findFloatingClusters()
-            
-            for cluster in floatingClusters
-            {
-                orbsDestroyed += cluster.count
+                var orbsDestroyed = cluster.count
+                
+                if let audio = AudioManager.playSFX(named: "Cluster Clear")
+                {
+                    run(audio)
+                }
+
+                // Reset shotsTaken to reward player for combos. i.e. three shots WITHOUT a combo will cause the drop
+                shotsTaken = 0
                 
                 for orb in cluster
                 {
-                    coloursToCheck.insert(orb.colour)
                     orbMatrix[orb.y!][orb.x!] = nil
                     orb.removeFromParent()
                 }
-            }
-            
-            // Update score
-            if GameVariables.curScore < GameConstants.MaxScore
-            {
-                GameVariables.curScore += (comboMultiplier * (orbsDestroyed * 50))
                 
-                if GameVariables.curScore > GameConstants.MaxScore
+                let floatingClusters = findFloatingClusters()
+                
+                for cluster in floatingClusters
                 {
-                    GameVariables.curScore = GameConstants.MaxScore
-                }
-            }
-            
-            comboMultiplier += 1
-            
-            if winCheck(orbMatrix: orbMatrix)
-            {
-                print("You win!")
-                endScoreDisplay.triggerDisplay(gameOver: false)
-                //moveToNextLevel()
-            }
-            else
-            {
-                for colour in coloursToCheck
-                {
-                    if isColourEliminated(colour)
+                    orbsDestroyed += cluster.count
+                    
+                    for orb in cluster
                     {
-                        stopSpawningOrbs(ofColour: colour)
+                        coloursToCheck.insert(orb.colour)
+                        orbMatrix[orb.y!][orb.x!] = nil
+                        orb.removeFromParent()
+                    }
+                }
+                
+                // Update score
+                if GameVariables.curScore < GameConstants.MaxScore
+                {
+                    GameVariables.curScore += (comboMultiplier * (orbsDestroyed * 50))
+                    
+                    if GameVariables.curScore > GameConstants.MaxScore
+                    {
+                        GameVariables.curScore = GameConstants.MaxScore
+                    }
+                }
+                
+                comboMultiplier += 1
+                
+                if winCheck(orbMatrix: orbMatrix)
+                {
+                    print("You win!")
+                    gameOver = true
+                    endScoreDisplay.triggerDisplay(gameOver: false)
+                    //moveToNextLevel()
+                }
+                else
+                {
+                    for colour in coloursToCheck
+                    {
+                        if isColourEliminated(colour)
+                        {
+                            stopSpawningOrbs(ofColour: colour)
+                        }
                     }
                 }
             }
-        }
-        else
-        {
-            // The play missed a cluster, so drop the combo
-            comboMultiplier = 1
-        }
-        
-        lblScore.text = String(format: "Score: %05d", GameVariables.curScore)
-        processingPreviousShot = false
-        shotsTaken += 1
-        
-        if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
-        {
-            print("Game over!")
-            endScoreDisplay.triggerDisplay(gameOver: true)
+            else
+            {
+                // The play missed a cluster, so drop the combo
+                comboMultiplier = 1
+            }
+            
+            lblScore.text = String(format: "Score: %05d", GameVariables.curScore)
+            processingPreviousShot = false
+            shotsTaken += 1
+            
+            if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
+            {
+                print("Game over!")
+                gameOver = true
+                endScoreDisplay.triggerDisplay(gameOver: true)
+            }
         }
     }
     
@@ -577,7 +587,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
 //        moveToNextLevel()
-        if !pauseMenu.isGamePaused
+        if !pauseMenu.isGamePaused && !gameOver
         {
             framesSinceLastTap = 0
             shouldCountFramesSinceLastTap = true
@@ -598,7 +608,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?)
     {
-        if !pauseMenu.isGamePaused
+        if !pauseMenu.isGamePaused && !gameOver
         {
             for touch in touches
             {
@@ -623,7 +633,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if framesSinceLastTap <= frameTimerLimit
+        if framesSinceLastTap <= frameTimerLimit && !gameOver
         {
             // Process "Tap" events, in this case
             let touch = touches.first as UITouch!
@@ -662,13 +672,13 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 } else if node.name == btnPause.name {
                     pauseMenu.toggleGamePaused()
                     foundOtherEvent = true
-                    AudioManager.togglePauseBGM()
+                    //AudioManager.togglePauseBGM()
                 }
                 else if node.name == "btnResume"
                 {
                     foundOtherEvent = true
                     pauseMenu.toggleGamePaused()
-                    AudioManager.togglePauseBGM()
+                    //AudioManager.togglePauseBGM()
                 }
                 else if node.name == "btnQuit"
                 {
@@ -687,7 +697,11 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             if !pauseMenu.isGamePaused && !foundOtherEvent && !processingPreviousShot
             {
-                run(AudioManager.playSFX(named: "Orb Shot"))
+                if let audio = AudioManager.playSFX(named: "Orb Shot")
+                {
+                    run(audio)
+                }
+                
                 processingPreviousShot = true
                 fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
                 //print(imgArrow.position)
@@ -707,7 +721,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             framesSinceLastTap += 1
         }
         
-        if shotsTaken >= self.level.barrierDropRate
+        if shotsTaken >= self.level.barrierDropRate && !gameOver
         {
             shotsTaken = 0
             dropper(barrier: imgBarrier, orbMatrix: orbMatrix, dropRate: dropSize)
@@ -716,6 +730,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
             {
                 print("Game Over!")
+                gameOver = true
                 endScoreDisplay.triggerDisplay(gameOver: true)
             }
         }
