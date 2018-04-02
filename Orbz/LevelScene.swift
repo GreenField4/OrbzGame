@@ -359,7 +359,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
         if cluster.count >= 3
         {
-            //                print("cluster detected")
+            // Reset shotsTaken to reward player for combos. i.e. three shots WITHOUT a combo will cause the drop
+            shotsTaken = 0
             
             for orb in cluster
             {
