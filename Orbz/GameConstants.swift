@@ -31,6 +31,8 @@ struct GameConstants
     
     public static let NeighbourOffsetTable = [[[0, -1], [1, -1], [-1, 0], [1, 0], [0, 1], [1, 1]], [[-1, -1], [0, -1], [-1, 0], [1, 0], [-1, 1], [0, 1]]]
     
+    public static let MaxScore = 99999
+    
     struct CollisionCategories
     {
         private init() {}

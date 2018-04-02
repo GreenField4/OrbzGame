@@ -392,7 +392,16 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             }
             
             // Update score
-            GameVariables.curScore += (comboMultiplier * (orbsDestroyed * 50))
+            if GameVariables.curScore < GameConstants.MaxScore
+            {
+                GameVariables.curScore += (comboMultiplier * (orbsDestroyed * 50))
+                
+                if GameVariables.curScore > GameConstants.MaxScore
+                {
+                    GameVariables.curScore = GameConstants.MaxScore
+                }
+            }
+            
             comboMultiplier += 1
             
             if winCheck(orbMatrix: orbMatrix)
@@ -417,7 +426,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             comboMultiplier = 1
         }
         
-        lblScore.text = String(format: "Score: %04d", GameVariables.curScore)
+        lblScore.text = String(format: "Score: %05d", GameVariables.curScore)
         processingPreviousShot = false
         shotsTaken += 1
         
@@ -518,11 +527,11 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         nextOrbLabel.position = CGPoint(x: size.width / 8, y: size.height / 14)
         self.addChild(nextOrbLabel)
         
-        lblScore.text = String(format: "Score: %04d", GameVariables.curScore)
+        lblScore.text = String(format: "Score: %05d", GameVariables.curScore)
         lblScore.fontName = "AvenirNext-Bold"
         lblScore.fontSize = 25
         lblScore.fontColor = SKColor.white
-        lblScore.position = CGPoint(x: self.frame.minX + 75, y: self.frame.maxY - 25)
+        lblScore.position = CGPoint(x: self.frame.minX + 85, y: self.frame.maxY - 25)
         self.addChild(lblScore)
         
         btnPause.size = CGSize(width: 40, height: 40 )
