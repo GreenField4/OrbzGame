@@ -79,7 +79,7 @@ class LevelEndScoreDisplay: SKNode
         
         if !GameVariables.toggleMute
         {
-            AudioManager.playBGM(named: sfxName)
+            AudioManager.playBGM(named: sfxName, loop: false)
         }
         
         let loadNextLevel = SKAction.run {

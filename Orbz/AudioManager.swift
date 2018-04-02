@@ -38,6 +38,7 @@ class AudioManager
         do
         {
             instance.bgmPlayer = try AVAudioPlayer(contentsOf: instance.urlCurrentBGM!)
+            
             instance.bgmPlayer!.numberOfLoops = -1
             
             if (!instance.isPaused)
@@ -66,7 +67,12 @@ class AudioManager
             if !GameVariables.toggleMute
             {
                 instance.bgmPlayer = try AVAudioPlayer(contentsOf: instance.urlCurrentBGM!)
-                instance.bgmPlayer!.numberOfLoops = -1
+                
+                if loop
+                {
+                    instance.bgmPlayer!.numberOfLoops = -1
+                }
+                
                 instance.bgmPlayer!.play()
             }
         }
