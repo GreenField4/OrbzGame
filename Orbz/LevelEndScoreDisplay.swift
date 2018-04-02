@@ -73,11 +73,11 @@ class LevelEndScoreDisplay: SKNode
         self.isHidden = false
         AudioManager.stopBGM()
         
-        let playWinLoseSFX = AudioManager.playSFX(named: sfxName, waitForCompletion: false)
+        let playWinLoseSFX = AudioManager.playSFX(named: sfxName, waitForCompletion: true)
         let loadNextLevel = SKAction.run {
             LevelLoader.moveToNextLevel(scene: self.scene!)
         }
 
-        self.run(SKAction.sequence([playWinLoseSFX, SKAction.wait(forDuration: 10), loadNextLevel]))
+        self.run(SKAction.sequence([playWinLoseSFX, loadNextLevel]))
     }
 }
