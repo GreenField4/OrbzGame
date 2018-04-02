@@ -12,7 +12,7 @@ import GameplayKit
 
 class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let imgArrow = SKSpriteNode(imageNamed: "ornamented_arrow_0")
-    let btnReserve = SKSpriteNode()
+    let btnReserve = SKSpriteNode(imageNamed: "Reserve")
     let imgBarrier = SKSpriteNode()
     let btnPause = SKSpriteNode(imageNamed: "Pause")
     let lblScore = SKLabelNode()
