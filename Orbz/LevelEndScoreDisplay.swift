@@ -85,7 +85,16 @@ class LevelEndScoreDisplay: SKNode
         let loadNextLevel = SKAction.run {
             if !gameOver
             {
-                LevelLoader.moveToNextLevel(scene: self.scene!)
+                if !LevelLoader.isGameBeaten()
+                {
+                    LevelLoader.moveToNextLevel(scene: self.scene!)
+                }
+                else
+                {
+                    let levelTransition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
+                    let nextLevelScene = TitleScene(size: self.scene!.size)
+                    self.scene!.view?.presentScene(nextLevelScene, transition: levelTransition)
+                }
             }
             else
             {
