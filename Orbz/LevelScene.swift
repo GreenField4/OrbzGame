@@ -31,6 +31,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     var dropSize: CGFloat = 0
     var processingPreviousShot: Bool = false
     var shotsTaken: Int = 0
+    var comboMultiplier = 1
     
     // Calculate screen position from row and column indices
     private func getOrbCoordinate(_ row: Int, _ col: Int, drop: CGFloat) -> CGPoint
@@ -95,6 +96,11 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     private func moveToNextLevel()
     {
+        if GameVariables.curScore > GameVariables.highScore
+        {
+            GameVariables.highScore = GameVariables.curScore
+        }
+        
         if LevelLoader.isGameBeaten()
         {
             // Do something here later
@@ -359,6 +365,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
         if cluster.count >= 3
         {
+            var orbsDestroyed = cluster.count
+            
             run(AudioManager.playSFX(named: "Cluster Clear"))
             // Reset shotsTaken to reward player for combos. i.e. three shots WITHOUT a combo will cause the drop
             shotsTaken = 0
@@ -373,6 +381,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             for cluster in floatingClusters
             {
+                orbsDestroyed += cluster.count
+                
                 for orb in cluster
                 {
                     coloursToCheck.insert(orb.colour)
@@ -380,6 +390,10 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                     orb.removeFromParent()
                 }
             }
+            
+            // Update score
+            GameVariables.curScore += (comboMultiplier * (orbsDestroyed * 50))
+            comboMultiplier += 1
             
             if winCheck(orbMatrix: orbMatrix)
             {
@@ -397,6 +411,12 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 }
             }
         }
+        else
+        {
+            // The play missed a cluster, so drop the combo
+            comboMultiplier = 1
+        }
+        
         lblScore.text = String(format: "Score: %04d", GameVariables.curScore)
         processingPreviousShot = false
         shotsTaken += 1

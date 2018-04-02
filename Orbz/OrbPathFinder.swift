@@ -36,7 +36,7 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
         let normalDirection = SKAction.moveBy(x: direction.dx, y: direction.dy, duration: TimeInterval(speed * 3))
         let revDirectionMove = SKAction.moveBy(x: revDirection.dx, y: revDirection.dy, duration: TimeInterval(speed * 3))
         let missAction = SKAction.run() {
-            orb.run(SKAction.repeatForever(SKAction.sequence([revDirectionMove, normalDirection])))
+            orb.run(SKAction.repeatForever(SKAction.sequence([AudioManager.playSFX(named: "Orb Bounce") ,revDirectionMove, normalDirection])))
         }
         orb.run(SKAction.sequence([initalMove, missAction]))
     }

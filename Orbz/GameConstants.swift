@@ -29,10 +29,6 @@ struct GameConstants
     public static let RowHeight = CGFloat(43)
     public static let StartRow = CGFloat(29.1666870117)
     
-    //public static let NeighbourOffsetTable = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, -1], [1, 1], [-1, -1], [-1, 1]]
-    
-    //public static let NeighbourOffsetTable = [[[-1, 0], [-1, 1], [0, -1], [0, 1], [1, 0], [1, 1]], [[-1, -1], [-1, 0], [0, -1], [0, 1], [1, -1], [1, 0]]]
-    
     public static let NeighbourOffsetTable = [[[0, -1], [1, -1], [-1, 0], [1, 0], [0, 1], [1, 1]], [[-1, -1], [0, -1], [-1, 0], [1, 0], [-1, 1], [0, 1]]]
     
     struct CollisionCategories
