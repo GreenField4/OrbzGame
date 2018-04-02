@@ -43,6 +43,8 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
 }
 
 func dropper(barrier : SKSpriteNode, orbMatrix : Array<Array<Orb?>>, dropRate : CGFloat) {
+    barrier.run(AudioManager.playSFX(named: "Barrier Drop"))
+    
     let drop = SKAction.moveBy(x: 0, y:  0 - dropRate, duration: 0.1)
     for i in (0..<orbMatrix.count){
         for j in (0..<orbMatrix[i].count){

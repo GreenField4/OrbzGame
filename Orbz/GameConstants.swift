@@ -19,9 +19,9 @@ struct GameConstants
     private static let yellowOrbTexture = UIImage(named: "sphere_golden")!
     private static let purpleOrbTexture = UIImage(named: "sphere_purple")!
     private static let orangeOrbTexture = UIImage(named: "sphere_orange")!
-    private static let pinkOrbTexture = UIImage(named: "sphere_pink")!
+    private static let lightBlueOrbTexture = UIImage(named: "sphere_light_blue")!
     
-    public static let orbTextureAtlas = SKTextureAtlas(dictionary: ["red":redOrbTexture, "blue":blueOrbTexture, "green":greenOrbTexture, "yellow":yellowOrbTexture, "purple":purpleOrbTexture, "orange":orangeOrbTexture, "pink":pinkOrbTexture])
+    public static let orbTextureAtlas = SKTextureAtlas(dictionary: ["red":redOrbTexture, "blue":blueOrbTexture, "green":greenOrbTexture, "yellow":yellowOrbTexture, "purple":purpleOrbTexture, "orange":orangeOrbTexture, "lblue":lightBlueOrbTexture])
     
     public static let OrbWidth = redOrbTexture.size.width / 1.2
     public static let OrbHeight = redOrbTexture.size.height / 1.2

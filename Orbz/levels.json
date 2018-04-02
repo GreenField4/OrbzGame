@@ -1,8 +1,8 @@
 [
  {
     "bgTextureName":"level1",
-    "bgMusicName":"titlescene",
-    "barrierDropRate":5,
+    "bgMusicName":"LevelOne",
+    "barrierDropRate":2,
     "orbColorMatrix":[
         ["red", "red", "yellow", "yellow", "blue", "blue", "green", "green"],
         ["red", "red", "yellow", "yellow", "blue", "blue", "green"],
@@ -12,8 +12,21 @@
  },
  {
     "bgTextureName":"level2",
-    "bgMusicName":"titlescene",
-    "barrierDropRate":6,
+    "bgMusicName":"LevelTwo",
+    "barrierDropRate":3,
+    "orbColorMatrix":[
+        ["blue", "blue", "yellow", "red", "red", "yellow", "blue", "blue"],
+        ["purple", "blue", "yellow", "red", "yellow", "blue", "purple"],
+        ["green", "green", "blue", "yellow", "yellow", "blue", "green", "green"],
+        ["orange", "purple", "blue", "yellow", "blue", "purple", "orange"],
+        ["orange", "orange", "purple", "blue", "blue", "purple", "orange", "orange"],
+        ["", "yellow", "yellow", "blue", "yellow", "yellow"]
+    ]
+ },
+ {
+    "bgTextureName":"level2",
+    "bgMusicName":"LevelThree",
+    "barrierDropRate":4,
     "orbColorMatrix":[
         ["", "yellow", "yellow", "yellow", "red", "red", "red"],
         ["yellow", "", "", "", "", "", "red"],
@@ -21,6 +34,17 @@
         ["yellow", "blue", "green", "purple", "blue", "green", "red"],
         ["", "green", "purple", "blue", "green", "purple", "blue", ""],
         ["", "blue", "green", "purple", "blue", "green", ""]
+    ]
+ },
+ {
+    "bgTextureName":"level2",
+    "bgMusicName":"LastLevel",
+    "barrierDropRate":5,
+    "orbColorMatrix":[
+        ["blue", "green", "green", "orange", "green", "yellow", "yellow", "lblue"],
+        ["blue", "purple", "red", "lblue", "green", "purple", "green"],
+        ["blue", "red", "orange", "lblue", "orange", "orange", "blue", "lblue"],
+        ["purple", "yellow", "blue", "red", "lblue", "yellow", "orange"]
     ]
  }
 ]

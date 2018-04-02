@@ -359,6 +359,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
         if cluster.count >= 3
         {
+            run(AudioManager.playSFX(named: "Cluster Clear"))
             // Reset shotsTaken to reward player for combos. i.e. three shots WITHOUT a combo will cause the drop
             shotsTaken = 0
             
@@ -651,7 +652,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             if !pauseMenu.isGamePaused && !foundOtherEvent && !processingPreviousShot
             {
-                run(AudioManager.playSFX(named: "shot"))
+                run(AudioManager.playSFX(named: "Orb Shot"))
                 processingPreviousShot = true
                 fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
                 //print(imgArrow.position)
