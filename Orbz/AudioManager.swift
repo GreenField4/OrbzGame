@@ -51,7 +51,7 @@ class AudioManager
         }
     }
     
-    public static func playBGM(named: String)
+    public static func playBGM(named: String, loop: Bool = true)
     {
         let path = Bundle.main.path(forResource: "Sounds/\(named).mp3", ofType: nil)
         instance.urlCurrentBGM = URL(fileURLWithPath: path!)
