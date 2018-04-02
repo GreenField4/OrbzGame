@@ -102,8 +102,8 @@ class AudioManager
         }
     }
     
-    public static func playSFX(named: String) -> SKAction
+    public static func playSFX(named: String, waitForCompletion: Bool = false) -> SKAction
     {
-        return SKAction.playSoundFileNamed("Sounds/Sound Effects/\(named).mp3", waitForCompletion: false)
+        return SKAction.playSoundFileNamed("Sounds/Sound Effects/\(named).mp3", waitForCompletion: waitForCompletion)
     }
 }

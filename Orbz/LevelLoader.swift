@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import SpriteKit
+
 class LevelLoader
 {
     private static let instance = LevelLoader()
@@ -45,5 +47,25 @@ class LevelLoader
     {
         instance.progress += 1
         return instance.levels.count == instance.progress
+    }
+    
+    public static func moveToNextLevel(scene: SKScene)
+    {
+        if GameVariables.curScore > GameVariables.highScore
+        {
+            GameVariables.highScore = GameVariables.curScore
+        }
+        
+        if LevelLoader.isGameBeaten()
+        {
+            // Do something here later
+            print("Wow, you beat the game!")
+        }
+        else
+        {
+            let levelTransition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
+            let nextLevelScene = LevelScene(size: scene.size)
+            scene.view?.presentScene(nextLevelScene, transition: levelTransition)
+        }
     }
 }

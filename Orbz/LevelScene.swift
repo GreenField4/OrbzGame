@@ -18,6 +18,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let lblScore = SKLabelNode()
     private let arrowAnchor = SKNode()
     let pauseMenu = PauseMenu()
+    let endScoreDisplay = LevelEndScoreDisplay()
     var colorsUsed = Array<String>()
     var orbQueue = Array<Orb>()
     let level = LevelLoader.getNextLevel()
@@ -94,25 +95,25 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         //print(GameConstants.OrbWidth)
     }
     
-    private func moveToNextLevel()
-    {
-        if GameVariables.curScore > GameVariables.highScore
-        {
-            GameVariables.highScore = GameVariables.curScore
-        }
-        
-        if LevelLoader.isGameBeaten()
-        {
-            // Do something here later
-            print("Wow, you beat the game!")
-        }
-        else
-        {
-            let levelTransition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
-            let nextLevelScene = LevelScene(size: self.size)
-            self.view?.presentScene(nextLevelScene, transition: levelTransition)
-        }
-    }
+//    public func moveToNextLevel()
+//    {
+//        if GameVariables.curScore > GameVariables.highScore
+//        {
+//            GameVariables.highScore = GameVariables.curScore
+//        }
+//
+//        if LevelLoader.isGameBeaten()
+//        {
+//            // Do something here later
+//            print("Wow, you beat the game!")
+//        }
+//        else
+//        {
+//            let levelTransition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
+//            let nextLevelScene = LevelScene(size: self.size)
+//            self.view?.presentScene(nextLevelScene, transition: levelTransition)
+//        }
+//    }
     
     private func getNextPlayerOrb()
     {
@@ -407,7 +408,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             if winCheck(orbMatrix: orbMatrix)
             {
                 print("You win!")
-                moveToNextLevel()
+                endScoreDisplay.triggerDisplay(gameOver: false)
+                //moveToNextLevel()
             }
             else
             {
@@ -433,6 +435,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
         {
             print("Game over!")
+            endScoreDisplay.triggerDisplay(gameOver: true)
         }
     }
     
@@ -546,6 +549,9 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         self.addChild(btnPause)
         self.addChild(pauseMenu)
         pauseMenu.initPauseMenu()
+        
+        self.addChild(endScoreDisplay)
+        endScoreDisplay.initLevelEndScoreDisplay()
         
         AudioManager.playBGM(named: level.bgMusicName)
         
@@ -710,6 +716,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
             {
                 print("Game Over!")
+                endScoreDisplay.triggerDisplay(gameOver: true)
             }
         }
         
