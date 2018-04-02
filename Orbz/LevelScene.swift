@@ -62,7 +62,10 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         }
         
         //print(xOffset)
-        let gridX = floor((x - xOffset) / (GameConstants.OrbWidth/1.2) )
+        var gridX = floor((x - xOffset) / (GameConstants.OrbWidth/1.2) )
+        if gridX < 0{
+            gridX = 0
+        }
         return CGPoint(x: gridX, y: gridY)
     }
     
