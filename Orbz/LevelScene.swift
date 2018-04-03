@@ -52,7 +52,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     // Calculate row and column indices from screen position
     private func getGridPosition(_ x: CGFloat, _ y: CGFloat, drop: CGFloat) -> CGPoint
     {
-        let gridY = floor((y - drop + 8.6 ) / GameConstants.RowHeight)
+        let gridY = floor((y - drop + (GameVariables.OrbHeight * 0.2) ) / (GameVariables.OrbHeight - 15))
         
         var xOffset = CGFloat(0)
         if ((gridY).truncatingRemainder(dividingBy: 2) == 1)
