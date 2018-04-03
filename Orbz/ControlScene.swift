@@ -29,8 +29,8 @@ class ControlScene: SKScene {
         print("Instruction label created")
         let lblInstruction = SKLabelNode(fontNamed: "Courier")
         lblInstruction.fontColor = SKColor.white
-        lblInstruction.fontSize = 20
-        lblInstruction.text = "Each level consists of some sort of arrangement of \ndifferent coloured orbs (red, green, yellow, white, etc). \nThe player’s goal is to clear the screen of all \norbs to progress to the next level. \nTo clear orbs, players must match \nfour or more of the same coloured orbs. \nThe player loses, however, if the player’s \nsprite comes into contact with any of the orbs in the level."
+        lblInstruction.fontSize = 11
+        lblInstruction.text = "Each level consists of some sort of arrangement of \ndifferent coloured orbs (red, green, yellow, orange, etc). \nThe player’s goal is to clear the screen of all \norbs to progress to the next level. \nTo clear orbs, players must match \nfour or more of the same coloured orbs. \nThe player loses, however, if the player’s \nsprite comes into contact with any of the orbs in the level."
         lblInstruction.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-400);
         lblInstruction.numberOfLines = 0
         self.addChild(lblInstruction)
@@ -39,7 +39,7 @@ class ControlScene: SKScene {
         print("Control title label created")
         let lblControlsTitle = SKLabelNode(fontNamed: "Courier")
         lblControlsTitle.fontColor = SKColor.white
-        lblControlsTitle.fontSize = 30
+        lblControlsTitle.fontSize = 20
         lblControlsTitle.text = "Controls"
         lblControlsTitle.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-550);
         lblControlsTitle.numberOfLines = 0
@@ -49,7 +49,7 @@ class ControlScene: SKScene {
         print("Controls label created")
         let lblControls = SKLabelNode(fontNamed: "Courier")
         lblControls.fontColor = SKColor.white
-        lblControls.fontSize = 25
+        lblControls.fontSize = 13
         lblControls.text = "Swipe Left -> Rotate cannon counterclockwise \nSwipe Right -> Rotate cannon clockwise \nTap Screen -> Shoot \nTap Pause Button -> Display Pause Menu \nTap Reserve Box -> Switch Orb with Reserve"
         lblControls.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY - 700);
         lblControls.numberOfLines = 0

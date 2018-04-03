@@ -540,7 +540,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         nextOrbLabel.fontName = "AvenirNext-Bold"
         nextOrbLabel.fontSize = 25
         nextOrbLabel.fontColor = SKColor.white
-        nextOrbLabel.position = CGPoint(x: size.width / 8, y: size.height / 14)
+        nextOrbLabel.position = CGPoint(x: size.width / 8, y: size.height / 12)
         self.addChild(nextOrbLabel)
         
         lblScore.text = String(format: "Score: %05d", GameVariables.curScore)
