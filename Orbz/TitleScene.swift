@@ -14,16 +14,24 @@ class TitleScene: SKScene {
     let btnToggleMute = SKLabelNode(fontNamed: "Courier")
     let btnPlay = SKLabelNode(fontNamed: "Courier")
     let btnControls = SKLabelNode(fontNamed: "Courier")
+   
     
     override func didMove(to view: SKView) {
         backgroundColor = SKColor.black
+        
+        let imgLogo = SKSpriteNode(imageNamed: "logo")
+        imgLogo.size = CGSize(width: self.frame.maxX - 100, height: 100 )
+        imgLogo.name = "imgLogo"
+        imgLogo.color = SKColor.white
+        imgLogo.position = CGPoint(x:self.frame.midX, y:self.frame.midY + 200)
+        self.addChild(imgLogo)
+        
         //play button
-
         btnPlay.fontColor = SKColor.white
         btnPlay.fontSize = 30
         btnPlay.text = "PLAY"
         btnPlay.name = "btnPlay"
-        btnPlay.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+200);
+        btnPlay.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+100);
         self.addChild(btnPlay)
         
         //instruction button
@@ -32,14 +40,14 @@ class TitleScene: SKScene {
         btnControls.fontSize = 30
         btnControls.text = "Controls"
         btnControls.name = "btnControls"
-        btnControls.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+100);
+        btnControls.position =  CGPoint(x:self.frame.midX, y:self.frame.midY);
         self.addChild(btnControls)
         
         btnToggleMute.fontColor = SKColor.white
         btnToggleMute.fontSize = 30
         btnToggleMute.text = "Toggle Mute"
         btnToggleMute.name = "btnToggleMute"
-        btnToggleMute.position =  CGPoint(x:self.frame.midX, y:self.frame.midY);
+        btnToggleMute.position =  CGPoint(x:self.frame.midX, y:self.frame.midY-100);
         self.addChild(btnToggleMute)
         
         AudioManager.playBGM(named: "titlescene")
