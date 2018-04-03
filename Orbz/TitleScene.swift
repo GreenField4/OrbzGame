@@ -44,6 +44,9 @@ class TitleScene: SKScene {
         self.addChild(btnToggleMute)
         
         AudioManager.playBGM(named: "titlescene")
+        
+        GameVariables.curScore = 0
+        LevelLoader.resetLevelProgress()
     }
     
     

@@ -31,23 +31,23 @@ class LevelEndScoreDisplay: SKNode
         self.zPosition = 1
         
         let menuBack = SKSpriteNode()
-        menuBack.size = CGSize(width: self.scene!.frame.midX, height: 300 )
+        menuBack.size = CGSize(width: self.scene!.frame.midX, height: 150 )
         menuBack.color = SKColor.black
         menuBack.position = CGPoint(x:self.scene!.frame.midX, y:self.scene!.frame.midY)
         self.addChild(menuBack)
         
         winLoseMessageLbl.fontSize = 30
-        winLoseMessageLbl.position = CGPoint(x: self.scene!.frame.midX, y: self.scene!.frame.midY + 100)
+        winLoseMessageLbl.position = CGPoint(x: self.scene!.frame.midX, y: self.scene!.frame.midY + 40)
         self.addChild(winLoseMessageLbl)
         
         curScoreLbl.text = "Score: \(GameVariables.curScore)"
         curScoreLbl.fontSize = 20
-        curScoreLbl.position = CGPoint(x: self.scene!.frame.midX, y: self.scene!.frame.midY)
+        curScoreLbl.position = CGPoint(x: self.scene!.frame.midX - 20, y: self.scene!.frame.midY + 20)
         self.addChild(curScoreLbl)
         
-        highScoreLbl.text = "Best: \(GameVariables.highScore)"
+        highScoreLbl.text = "Best:  \(GameVariables.highScore)"
         highScoreLbl.fontSize = 20
-        curScoreLbl.position = CGPoint(x: self.scene!.frame.midX, y: self.scene!.frame.midY - 100)
+        highScoreLbl.position = CGPoint(x: self.scene!.frame.midX - 20, y: self.scene!.frame.midY + 5)
         self.addChild(highScoreLbl)
         
         self.isHidden = true
@@ -62,7 +62,7 @@ class LevelEndScoreDisplay: SKNode
             curScoreLbl.text = "Score: \(GameVariables.curScore)"
             highScoreLbl.text = "Best: \(GameVariables.highScore)"
             winLoseMessageLbl.text = "GAME OVER"
-            winLoseMessageLbl.color = SKColor.red
+            winLoseMessageLbl.fontColor = SKColor.red
             sfxName = "Defeat"
         }
         else
@@ -70,7 +70,7 @@ class LevelEndScoreDisplay: SKNode
             curScoreLbl.text = "Score: \(GameVariables.curScore)"
             highScoreLbl.text = "Best: \(GameVariables.highScore)"
             winLoseMessageLbl.text = "LEVEL CLEAR"
-            winLoseMessageLbl.color = SKColor.yellow
+            winLoseMessageLbl.fontColor = SKColor.yellow
             sfxName = "Victory"
         }
         
