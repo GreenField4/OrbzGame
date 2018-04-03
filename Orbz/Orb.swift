@@ -21,7 +21,7 @@ class Orb: SKSpriteNode
         self.colour = color
         let texture = GameConstants.orbTextureAtlas.textureNamed(color)
         self.checkedForCluster = checked
-        super.init(texture: texture, color: SKColor.clear, size: CGSize(width: texture.size().width / 1.2, height: texture.size().height / 1.2))
+        super.init(texture: texture, color: SKColor.clear, size: CGSize(width: GameConstants.OrbWidth, height: GameConstants.OrbHeight))
         
         //self.physicsBody = SKPhysicsBody(texture: self.texture!,size:self.size)
         self.physicsBody = SKPhysicsBody(circleOfRadius: GameConstants.OrbWidth / 2.5)

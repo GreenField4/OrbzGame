@@ -31,7 +31,7 @@ class LevelEndScoreDisplay: SKNode
         self.zPosition = 1
         
         let menuBack = SKSpriteNode()
-        menuBack.size = CGSize(width: self.scene!.frame.midX, height: 150 )
+        menuBack.size = CGSize(width: self.scene!.frame.midX + 10, height: 150 )
         menuBack.color = SKColor.black
         menuBack.position = CGPoint(x:self.scene!.frame.midX, y:self.scene!.frame.midY)
         self.addChild(menuBack)

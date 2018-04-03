@@ -49,33 +49,15 @@ class TitleScene: SKScene {
         LevelLoader.resetLevelProgress()
     }
     
-    
-    func touchDown(atPoint pos : CGPoint) {
-        
-        
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        
-        
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        
-        
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t: AnyObject in touches {
             let location = t.location(in: self)
             let theNode = self.atPoint(location)
             if theNode.name == btnControls.name {
-                print("The Instruction button was touched")
                 let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
                 let gameScene = ControlScene(size: self.size);
                 self.view?.presentScene(gameScene, transition: transition)
             } else if theNode.name == btnPlay.name {
-                print("The play button was touched")
                 let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
                 let gameScene = LevelScene(size: self.size);
                 self.view?.presentScene(gameScene, transition: transition)
@@ -83,22 +65,5 @@ class TitleScene: SKScene {
                 AudioManager.toggleMute()
             }
         }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
     }
 }

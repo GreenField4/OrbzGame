@@ -54,14 +54,13 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     private func getGridPosition(_ x: CGFloat, _ y: CGFloat, drop: CGFloat) -> CGPoint
     {
         let gridY = floor((y - drop + 8.6 ) / GameConstants.RowHeight)
-        //print("grid system")
+        
         var xOffset = CGFloat(0)
         if ((gridY).truncatingRemainder(dividingBy: 2) == 1)
         {
             xOffset += GameConstants.OrbWidth / 2
         }
         
-        //print(xOffset)
         var gridX = floor((x - xOffset) / (GameConstants.OrbWidth/1.2) )
         if gridX < 0{
             gridX = 0
@@ -93,31 +92,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 }
             }
         }
-        //print(self.frame.maxY)
-        //print("Orb [0][0] X: \(orbMatrix[0][0]!.position.x)")
-        //print("Orb [0][1] X: \(orbMatrix[1][0]!.position.x)")
-        //print(GameConstants.OrbWidth)
     }
-    
-//    public func moveToNextLevel()
-//    {
-//        if GameVariables.curScore > GameVariables.highScore
-//        {
-//            GameVariables.highScore = GameVariables.curScore
-//        }
-//
-//        if LevelLoader.isGameBeaten()
-//        {
-//            // Do something here later
-//            print("Wow, you beat the game!")
-//        }
-//        else
-//        {
-//            let levelTransition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
-//            let nextLevelScene = LevelScene(size: self.size)
-//            self.view?.presentScene(nextLevelScene, transition: levelTransition)
-//        }
-//    }
     
     private func getNextPlayerOrb()
     {
@@ -141,7 +116,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         {
             getNextPlayerOrb()
         }
-        //orbQueue[0].position = CGPoint(x:self.frame.midX, y:self.frame.minY)
     }
     
     private func resetClusterCheck()
@@ -175,22 +149,16 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         }
         
         for i in 0..<neighbourOffsets.count
-//        for i in 0..<GameConstants.NeighbourOffsetTable.count
         {
             let neighbourX = orbX + neighbourOffsets[i][0]
             let neighbourY = orbY + neighbourOffsets[i][1]
-//            let neighbourX = orbX + GameConstants.NeighbourOffsetTable[i][0]
-//            let neighbourY = orbY + GameConstants.NeighbourOffsetTable[i][1]
-            //print(neighbourX)
-            //print(neighbourY)
+            
             if (neighbourX >= 0 && neighbourX < orbMatrix[0].count) && (neighbourY >= 0 && neighbourY < orbMatrix.count)
             {
-                //print(orbMatrix[neighbourY][neighbourX]?.colour)
                 if let neighbour = orbMatrix[neighbourY][neighbourX]
                 {
                     if !matchColour || (neighbour.colour == orb.colour)
                     {
-//                        print("Found neighbour")
                         neighbourOrbs.append(neighbour)
                     }
                 }
@@ -218,9 +186,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             while orbsToProcess.count > 0
             {
-                //print("new loop")
-                //print(orbsToProcess.count)
-//                print("Getting current orb to check")
                 let currentOrb = orbsToProcess.removeLast()
                 
                 if !matchColour || (currentOrb.colour == startingOrb.colour)
@@ -228,17 +193,11 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                     foundCluster.append(currentOrb)
                     
                     let neighbourOrbs = getOrbNeighbours(currentOrb, matchColour: matchColour)
-//                    print("Num neighbours: \(neighbourOrbs.count)")
                     for neighbour in neighbourOrbs
                     {
-//
-                        //print("neighbour checked: \(neighbour.checkedForCluster)")
                         if !neighbour.checkedForCluster
                         {
-//                            print("Adding neighbour to process queue")
-                            //print("haah")
                             orbsToProcess.append(neighbour)
-                            //print(orbsToProcess.count)
                             neighbour.checkedForCluster = true
                         }
                     }
@@ -358,8 +317,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             let pos = getGridPosition(xCenter, yCenter, drop: totalDrop)
             collidingOrb.x = Int(pos.x)
             collidingOrb.y = Int(pos.y)
-            //print("it begins")
-            //print(pos)
             collidingOrb.removeFromParent()
             orbMatrix[collidingOrb.y!][collidingOrb.x!] = collidingOrb
             collidingOrb.position = getOrbCoordinate(collidingOrb.y!, collidingOrb.x!, drop: totalDrop)
@@ -417,10 +374,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 
                 if winCheck(orbMatrix: orbMatrix)
                 {
-                    print("You win!")
                     gameOver = true
                     endScoreDisplay.triggerDisplay(gameOver: false)
-                    //moveToNextLevel()
                 }
                 else
                 {
@@ -445,7 +400,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
             {
-                print("Game over!")
                 gameOver = true
                 endScoreDisplay.triggerDisplay(gameOver: true)
             }
@@ -470,15 +424,12 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         
         if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.StuckOrb != 0)
         {
-            print("Orbs colliding")
             let collidingOrb = bodyA.node as! Orb
-//            let stuckOrb = bodyB.node as! Orb
             onOrbCollision(collidingOrb)
         }
         
         if (bodyA.categoryBitMask & GameConstants.CollisionCategories.Orb != 0) && (bodyB.categoryBitMask & GameConstants.CollisionCategories.Barrier != 0)
         {
-            print("ORB -> BARRIER")
             onOrbCollision(bodyA.node as! Orb)
         }
     }
@@ -499,18 +450,12 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         arrowAnchor.position = CGPoint(x: self.frame.midX, y: self.frame.minY)
         
         //shoot button created
-        print("Shoot arrow created")
         imgArrow.name = "imgArrow"
         imgArrow.position = CGPoint(x: 0, y: 130)
         arrowAnchor.addChild(imgArrow)
         self.addChild(arrowAnchor)
         
         //Barrier one image created
-
-        print("Barrier one image created")
-//        imgBarrier.size = CGSize(width: self.frame.maxX, height: )
-
-        print("Barrier image created")
         imgBarrier.size = CGSize(width: self.frame.maxX, height: self.frame.maxY )
 
         imgBarrier.name = "imgBarrier"
@@ -524,7 +469,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         self.addChild(imgBarrier)
         
         //Barrier one image created
-        print("reserve image created")
         btnReserve.size = CGSize(width: 80, height: 80 )
         btnReserve.name = "btnReserve"
         btnReserve.color = SKColor.white
@@ -558,7 +502,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         imgPauseBack.color = SKColor.white
         imgPauseBack.size = CGSize(width: 40, height: 40 )
         imgPauseBack.position = CGPoint(x: self.frame.maxX - 20 , y: self.frame.minY + btnReserve.size.height + (btnPause.size.height / 2) )
-        //self.addChild(imgPauseBack)
         self.addChild(btnPause)
         self.addChild(pauseMenu)
         pauseMenu.initPauseMenu()
@@ -572,24 +515,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         initPlayerOrbs()
     }
     
-    
-    func touchDown(atPoint pos : CGPoint) {
-        
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        
-        
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        
-        
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
-//        moveToNextLevel()
         if !pauseMenu.isGamePaused && !gameOver
         {
             framesSinceLastTap = 0
@@ -650,11 +577,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             {
                 if node.name == btnReserve.name && !pauseMenu.isGamePaused
                 {
-                    print("Reserve box tapped")
-                    
                     if reserveOrb == nil
                     {
-                        print("Sending orb to empty reserve box")
                         reserveOrb = orbQueue.removeFirst()
                         getNextPlayerOrb()
                         let reserveMove = SKAction.move(to: CGPoint(x: size.width - size.width/10, y: size.height/18), duration: 0.5)
@@ -662,7 +586,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                     }
                     else
                     {
-                        print("Swapping with reserve box")
                         let temp = orbQueue[0]
                         orbQueue[0] = reserveOrb!
                         let backMove = SKAction.move(to: CGPoint(x: self.frame.midX, y:self.frame.minY), duration: 0.5)
@@ -675,13 +598,11 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 } else if node.name == btnPause.name {
                     pauseMenu.toggleGamePaused()
                     foundOtherEvent = true
-                    //AudioManager.togglePauseBGM()
                 }
                 else if node.name == "btnResume"
                 {
                     foundOtherEvent = true
                     pauseMenu.toggleGamePaused()
-                    //AudioManager.togglePauseBGM()
                 }
                 else if node.name == "btnQuit"
                 {
@@ -707,16 +628,10 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
                 
                 processingPreviousShot = true
                 fire(angle: arrowAnchor.zRotation, orb: orbQueue.removeFirst(), maxX: self.frame.maxX, maxY: self.frame.maxY)
-                //print(imgArrow.position)
                 getNextPlayerOrb()
             }
         }
     }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
     
     override func update(_ currentTime: TimeInterval) {
         if shouldCountFramesSinceLastTap
@@ -732,7 +647,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             
             if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
             {
-                print("Game Over!")
                 gameOver = true
                 endScoreDisplay.triggerDisplay(gameOver: true)
             }

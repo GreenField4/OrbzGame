@@ -16,7 +16,6 @@ class ControlScene: SKScene {
     override func didMove(to view: SKView) {
         backgroundColor = SKColor.black
         //instruction Title label
-        print("Instruction title label created")
         let lblInstructionTitle = SKLabelNode(fontNamed: "Courier")
         lblInstructionTitle.fontColor = SKColor.white
         lblInstructionTitle.fontSize = 20
@@ -26,7 +25,6 @@ class ControlScene: SKScene {
         self.addChild(lblInstructionTitle)
         
         //instruction label
-        print("Instruction label created")
         let lblInstruction = SKLabelNode(fontNamed: "Courier")
         lblInstruction.fontColor = SKColor.white
         lblInstruction.fontSize = 11
@@ -36,7 +34,6 @@ class ControlScene: SKScene {
         self.addChild(lblInstruction)
         
         //Control Title label
-        print("Control title label created")
         let lblControlsTitle = SKLabelNode(fontNamed: "Courier")
         lblControlsTitle.fontColor = SKColor.white
         lblControlsTitle.fontSize = 20
@@ -46,7 +43,6 @@ class ControlScene: SKScene {
         self.addChild(lblControlsTitle)
         
         //instruction label
-        print("Controls label created")
         let lblControls = SKLabelNode(fontNamed: "Courier")
         lblControls.fontColor = SKColor.white
         lblControls.fontSize = 13
@@ -55,8 +51,6 @@ class ControlScene: SKScene {
         lblControls.numberOfLines = 0
         self.addChild(lblControls)
         //back button
-        print("Back button created")
-        
         btnBack.fontColor = SKColor.white
         btnBack.fontSize = 20
         btnBack.text = "Back"
@@ -66,49 +60,18 @@ class ControlScene: SKScene {
         
     }
     
-    func touchDown(atPoint pos : CGPoint) {
-        
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             let location = t.location(in: self)
             let theNode = self.atPoint(location)
             //back button was pressed
             if theNode.name == btnBack.name {
-                print("The back button was touched ")
                 let transition = SKTransition.moveIn(with: SKTransitionDirection.left, duration: 0.5)
                 let gameScene = TitleScene(size: self.size);
                 self.view?.presentScene(gameScene, transition: transition)
             } else {
-                print("outside area")
             }
         }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
     }
 }
 
