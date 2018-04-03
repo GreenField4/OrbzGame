@@ -20,9 +20,9 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
         let actionMove = SKAction.move(to: CGPoint(x: (maxX/2), y: maxY), duration: 2.0)
         orb.run(SKAction.sequence([actionMove]))
     }else {
-        var scalor = abs(((maxX/2)-GameConstants.OrbWidth/2)/direction.dx)
+        var scalor = abs(((maxX/2)-GameVariables.OrbWidth/2)/direction.dx)
         if (scalor * direction.dy) > maxY{
-            scalor = abs((maxY-GameConstants.OrbWidth/2)/direction.dy)
+            scalor = abs((maxY-GameVariables.OrbWidth/2)/direction.dy)
         } /*else if (scalor * direction.dy) > (maxY/2){
             speed = 1.5
         } else {

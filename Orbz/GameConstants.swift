@@ -23,8 +23,8 @@ struct GameConstants
     
     public static let orbTextureAtlas = SKTextureAtlas(dictionary: ["red":redOrbTexture, "blue":blueOrbTexture, "green":greenOrbTexture, "yellow":yellowOrbTexture, "purple":purpleOrbTexture, "orange":orangeOrbTexture, "lblue":lightBlueOrbTexture])
     
-    public static let OrbWidth = redOrbTexture.size.width / 1.2
-    public static let OrbHeight = redOrbTexture.size.height / 1.2
+//    public static let OrbWidth = redOrbTexture.size.width / 1.2
+//    public static let OrbHeight = redOrbTexture.size.height / 1.2
     public static let RowHeight = CGFloat(43)
     
     public static let NeighbourOffsetTable = [[[0, -1], [1, -1], [-1, 0], [1, 0], [0, 1], [1, 1]], [[-1, -1], [0, -1], [-1, 0], [1, 0], [-1, 1], [0, 1]]]

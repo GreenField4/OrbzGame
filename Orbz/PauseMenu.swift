@@ -35,7 +35,6 @@ class PauseMenu: SKNode
         self.addChild(menuBack)
         
         //play button
-        print("resume button created")
         btnResume.fontColor = SKColor.white
         btnResume.fontSize = 30
         btnResume.text = "Resume"
@@ -44,7 +43,6 @@ class PauseMenu: SKNode
         self.addChild(btnResume)
         
         //instruction button
-        print("quit button created")
         btnQuit.fontColor = SKColor.white
         btnQuit.fontSize = 30
         btnQuit.text = "Quit"
@@ -52,7 +50,6 @@ class PauseMenu: SKNode
         btnQuit.position =  CGPoint(x:self.scene!.frame.midX, y:self.scene!.frame.midY);
         self.addChild(btnQuit)
         
-        print("Play Music button created")
         btnToggleMute.fontColor = SKColor.white
         btnToggleMute.fontSize = 30
         btnToggleMute.text = "Toggle Mute"

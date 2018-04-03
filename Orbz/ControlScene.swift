@@ -20,7 +20,7 @@ class ControlScene: SKScene {
         lblInstructionTitle.fontColor = SKColor.white
         lblInstructionTitle.fontSize = 20
         lblInstructionTitle.text = "Instructions"
-        lblInstructionTitle.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-200);
+        lblInstructionTitle.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-100);
         lblInstructionTitle.numberOfLines = 0
         self.addChild(lblInstructionTitle)
         
@@ -28,8 +28,9 @@ class ControlScene: SKScene {
         let lblInstruction = SKLabelNode(fontNamed: "Courier")
         lblInstruction.fontColor = SKColor.white
         lblInstruction.fontSize = 11
-        lblInstruction.text = "Each level consists of some sort of arrangement of \ndifferent coloured orbs (red, green, yellow, orange, etc). \nThe player’s goal is to clear the screen of all \norbs to progress to the next level. \nTo clear orbs, players must match \nfour or more of the same coloured orbs. \nThe player loses, however, if the player’s \nsprite comes into contact with any of the orbs in the level."
-        lblInstruction.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-400);
+        lblInstruction.text = "Each level consists of some sort of \narrangement of different coloured orbs \n(red, green, yellow, orange, etc). \nThe player’s goal is to clear the screen of all \norbs to progress to the next level. \nTo clear orbs, players must match \nfour or more of the same coloured orbs. \nThe player loses, \nhowever, if the player’s \nsprite comes into contact with any \nof the orbs in the level."
+        lblInstruction.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-300);
+        lblInstruction.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.center
         lblInstruction.numberOfLines = 0
         self.addChild(lblInstruction)
         
@@ -38,7 +39,7 @@ class ControlScene: SKScene {
         lblControlsTitle.fontColor = SKColor.white
         lblControlsTitle.fontSize = 20
         lblControlsTitle.text = "Controls"
-        lblControlsTitle.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-550);
+        lblControlsTitle.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-400);
         lblControlsTitle.numberOfLines = 0
         self.addChild(lblControlsTitle)
         
@@ -47,7 +48,7 @@ class ControlScene: SKScene {
         lblControls.fontColor = SKColor.white
         lblControls.fontSize = 13
         lblControls.text = "Swipe Left -> Rotate cannon counterclockwise \nSwipe Right -> Rotate cannon clockwise \nTap Screen -> Shoot \nTap Pause Button -> Display Pause Menu \nTap Reserve Box -> Switch Orb with Reserve"
-        lblControls.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY - 700);
+        lblControls.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY - 500);
         lblControls.numberOfLines = 0
         self.addChild(lblControls)
         //back button
@@ -55,7 +56,7 @@ class ControlScene: SKScene {
         btnBack.fontSize = 20
         btnBack.text = "Back"
         btnBack.name = "btnBack"
-        btnBack.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-850);
+        btnBack.position =  CGPoint(x:self.frame.midX, y:self.frame.maxY-650);
         self.addChild(btnBack)
         
     }

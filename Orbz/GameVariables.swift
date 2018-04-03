@@ -7,10 +7,15 @@
 //
 //random Comment
 import Foundation
+import SpriteKit
+
 struct GameVariables {
     private init() {}
     
     static var toggleMute = false
     static var curScore = 0
     static var highScore = 0
+    
+    static var OrbWidth: CGFloat = 0
+    static var OrbHeight: CGFloat = 0
 }

@@ -38,14 +38,14 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     // Calculate screen position from row and column indices
     private func getOrbCoordinate(_ row: Int, _ col: Int, drop: CGFloat) -> CGPoint
     {
-        var orbX = (CGFloat(col) * GameConstants.OrbWidth / 1.2) + (GameConstants.OrbWidth / 2)
+        var orbX = (CGFloat(col) * GameVariables.OrbWidth / 1.2) + (GameVariables.OrbWidth / 2)
         
         if (row % 2 != 0)
         {
-            orbX += GameConstants.OrbWidth / 2.35
+            orbX += GameVariables.OrbWidth / 2.35
         }
         
-        let orbY = size.height - (GameConstants.OrbHeight / 2) - CGFloat(row * Int(GameConstants.OrbHeight - 15)) - drop
+        let orbY = size.height - (GameVariables.OrbHeight / 2) - CGFloat(row * Int(GameVariables.OrbHeight - 15)) - drop
         
         return CGPoint(x: orbX, y: orbY)
     }
@@ -58,10 +58,10 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         var xOffset = CGFloat(0)
         if ((gridY).truncatingRemainder(dividingBy: 2) == 1)
         {
-            xOffset += GameConstants.OrbWidth / 2
+            xOffset += GameVariables.OrbWidth / 2
         }
         
-        var gridX = floor((x - xOffset) / (GameConstants.OrbWidth/1.2) )
+        var gridX = floor((x - xOffset) / (GameVariables.OrbWidth/1.2) )
         if gridX < 0{
             gridX = 0
         }
@@ -100,8 +100,8 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         {
             let nextOrb = Orb(color: colorsUsed[Int(arc4random_uniform(UInt32(colorsUsed.count)))])
             orbQueue.append(nextOrb)
-            let nextMove = SKAction.move(to: CGPoint(x:self.frame.midX/4, y: GameConstants.OrbHeight/2), duration: 0.5)
-            orbQueue.last?.position = CGPoint(x:0 - self.frame.midX/4, y: GameConstants.OrbHeight/2)
+            let nextMove = SKAction.move(to: CGPoint(x:self.frame.midX/4, y: GameVariables.OrbHeight/2), duration: 0.5)
+            orbQueue.last?.position = CGPoint(x:0 - self.frame.midX/4, y: GameVariables.OrbHeight/2)
             
             let loadingMove = SKAction.move(to: CGPoint(x:self.frame.midX, y:self.frame.minY), duration: 0.5)
             self.addChild(nextOrb)
@@ -436,6 +436,10 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     
     override func didMove(to view: SKView)
     {
+        // Initialize Orb Matrix related "constants" based on the size of the device used
+        GameVariables.OrbWidth = self.frame.maxX / 7
+        GameVariables.OrbHeight = self.frame.maxX / 7
+        
         dropSize = (self.frame.maxY - 41 - loseLineLocation) / 5
         backgroundColor = SKColor.black
         

@@ -14,45 +14,15 @@ class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        /*
-        // Test level loading
-        LevelLoader.loadLevelsFromJSON()
-        let level = LevelLoader.getNextLevel()
-        print("BG Texture: \(level.bgTextureName)")
-        print("BG Music: \(level.bgMusicName)")
         
-        for row in level.orbMatrix
-        {
-            for orb in row
-            {
-                print("Orb Color: \(orb.color)")
-        
-            }
-        }
-        
-        print("")
-        
-        let level2 = LevelLoader.getNextLevel()
-        print("BG Texture: \(level2.bgTextureName)")
-        print("BG Music: \(level2.bgMusicName)")
-        
-        for row in level2.orbMatrix
-        {
-            for orb in row
-            {
-                print("Orb Color: \(orb.color)")
-                
-            }
-        }
-        */
         let titleScene = TitleScene()
         titleScene.scaleMode = .resizeFill
         
         let skView = view as! SKView
         skView.ignoresSiblingOrder = true
-        skView.showsNodeCount = true
-        skView.showsFPS = true
-        skView.showsPhysics = true
+        skView.showsNodeCount = false
+        skView.showsFPS = false
+        skView.showsPhysics = false
         
         skView.presentScene(titleScene)
     }

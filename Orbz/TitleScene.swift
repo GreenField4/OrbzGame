@@ -18,7 +18,7 @@ class TitleScene: SKScene {
     override func didMove(to view: SKView) {
         backgroundColor = SKColor.black
         //play button
-        print("Play button created")
+
         btnPlay.fontColor = SKColor.white
         btnPlay.fontSize = 30
         btnPlay.text = "PLAY"
@@ -27,7 +27,7 @@ class TitleScene: SKScene {
         self.addChild(btnPlay)
         
         //instruction button
-        print("Instruction button created")
+
         btnControls.fontColor = SKColor.white
         btnControls.fontSize = 30
         btnControls.text = "Controls"
@@ -35,7 +35,6 @@ class TitleScene: SKScene {
         btnControls.position =  CGPoint(x:self.frame.midX, y:self.frame.midY+100);
         self.addChild(btnControls)
         
-        print("Play Music button created")
         btnToggleMute.fontColor = SKColor.white
         btnToggleMute.fontSize = 30
         btnToggleMute.text = "Toggle Mute"
