@@ -40,14 +40,12 @@ class LevelEndScoreDisplay: SKNode
         winLoseMessageLbl.position = CGPoint(x: self.scene!.frame.midX, y: self.scene!.frame.midY + 40)
         self.addChild(winLoseMessageLbl)
         
-        curScoreLbl.text = "Score: \(GameVariables.curScore)"
         curScoreLbl.fontSize = 20
-        curScoreLbl.position = CGPoint(x: self.scene!.frame.midX - 20, y: self.scene!.frame.midY + 20)
+        curScoreLbl.position = CGPoint(x: self.scene!.frame.midX - 10, y: self.scene!.frame.midY + 10)
         self.addChild(curScoreLbl)
         
-        highScoreLbl.text = "Best:  \(GameVariables.highScore)"
         highScoreLbl.fontSize = 20
-        highScoreLbl.position = CGPoint(x: self.scene!.frame.midX - 20, y: self.scene!.frame.midY + 5)
+        highScoreLbl.position = CGPoint(x: self.scene!.frame.midX - 5, y: self.scene!.frame.midY - 10)
         self.addChild(highScoreLbl)
         
         self.isHidden = true
@@ -59,20 +57,19 @@ class LevelEndScoreDisplay: SKNode
         
         if gameOver
         {
-            curScoreLbl.text = "Score: \(GameVariables.curScore)"
-            highScoreLbl.text = "Best: \(GameVariables.highScore)"
             winLoseMessageLbl.text = "GAME OVER"
             winLoseMessageLbl.fontColor = SKColor.red
             sfxName = "Defeat"
         }
         else
         {
-            curScoreLbl.text = "Score: \(GameVariables.curScore)"
-            highScoreLbl.text = "Best: \(GameVariables.highScore)"
             winLoseMessageLbl.text = "LEVEL CLEAR"
             winLoseMessageLbl.fontColor = SKColor.yellow
             sfxName = "Victory"
         }
+        
+        curScoreLbl.text = String(format: "Score: %05d", GameVariables.curScore)
+        highScoreLbl.text = String(format: "Best: %05d", GameVariables.highScore)
         
         self.isHidden = false
         AudioManager.stopBGM()
