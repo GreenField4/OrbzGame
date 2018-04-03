@@ -28,7 +28,6 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
     let frameTimerLimit = 5
     var orbMatrix: [[Orb?]] = Array(repeating: Array(repeating: nil, count: 8), count: 15)
     var totalDrop : CGFloat = 41
-    let loseLineLocation = CGFloat(175)
     var dropSize: CGFloat = 0
     var processingPreviousShot: Bool = false
     var shotsTaken: Int = 0
@@ -303,6 +302,31 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         return true
     }
     
+    func dropper(barrier : SKSpriteNode, orbMatrix : Array<Array<Orb?>>, dropRate : CGFloat) {
+        if let audio = AudioManager.playSFX(named: "Barrier Drop")
+        {
+            barrier.run(audio)
+        }
+        
+        let drop = SKAction.moveBy(x: 0, y:  0 - dropRate, duration: 0.1)
+        for i in (0..<orbMatrix.count){
+            for j in (0..<orbMatrix[i].count){
+                if let temp = orbMatrix[i][j] {
+                    temp.run(drop)
+                }
+                
+            }
+        }
+        let missAction = SKAction.run() {
+            if loseCheck(orbMatrix: orbMatrix, loseLine: GameVariables.loseLineLocation) {
+                self.endScoreDisplay.triggerDisplay(gameOver: true)
+            }
+        }
+        barrier.run(SKAction.sequence([drop, missAction]))
+    }
+    
+    
+    
     private func onOrbCollision(_ collidingOrb: Orb)
     {
         if !gameOver
@@ -398,7 +422,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             processingPreviousShot = false
             shotsTaken += 1
             
-            if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
+            if loseCheck(orbMatrix: orbMatrix, loseLine: GameVariables.loseLineLocation)
             {
                 gameOver = true
                 endScoreDisplay.triggerDisplay(gameOver: true)
@@ -440,7 +464,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
         GameVariables.OrbWidth = self.frame.maxX / 7
         GameVariables.OrbHeight = self.frame.maxX / 7
         
-        dropSize = (self.frame.maxY - 41 - loseLineLocation) / 5
+        dropSize = (self.frame.maxY - 41 - GameVariables.loseLineLocation) / 5
         backgroundColor = SKColor.black
         
         let bgNode = SKSpriteNode(imageNamed: level.bgTextureName)
@@ -649,7 +673,7 @@ class LevelScene: SKScene,  SKPhysicsContactDelegate{
             dropper(barrier: imgBarrier, orbMatrix: orbMatrix, dropRate: dropSize)
             totalDrop += dropSize
             
-            if loseCheck(orbMatrix: orbMatrix, loseLine: loseLineLocation)
+            if loseCheck(orbMatrix: orbMatrix, loseLine: GameVariables.loseLineLocation)
             {
                 gameOver = true
                 endScoreDisplay.triggerDisplay(gameOver: true)

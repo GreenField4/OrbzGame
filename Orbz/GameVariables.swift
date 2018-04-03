@@ -15,7 +15,7 @@ struct GameVariables {
     static var toggleMute = false
     static var curScore = 0
     static var highScore = 0
-    
+    static var loseLineLocation  = CGFloat(175)
     static var OrbWidth: CGFloat = 0
     static var OrbHeight: CGFloat = 0
 }

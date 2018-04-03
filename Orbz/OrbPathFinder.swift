@@ -49,23 +49,6 @@ func fire(angle : CGFloat, orb : SKSpriteNode, maxX: CGFloat, maxY :CGFloat) {
     }
 }
 
-func dropper(barrier : SKSpriteNode, orbMatrix : Array<Array<Orb?>>, dropRate : CGFloat) {
-    if let audio = AudioManager.playSFX(named: "Barrier Drop")
-    {
-        barrier.run(audio)
-    }
-    
-    let drop = SKAction.moveBy(x: 0, y:  0 - dropRate, duration: 0.1)
-    for i in (0..<orbMatrix.count){
-        for j in (0..<orbMatrix[i].count){
-            if let temp = orbMatrix[i][j] {
-                temp.run(drop)
-            }
-            
-        }
-    }
-    barrier.run(drop)
-}
 
 func loseCheck(orbMatrix : Array<Array<Orb?>>, loseLine : CGFloat) -> Bool{
     for i in (0..<orbMatrix.count){
